@@ -1,0 +1,6 @@
+{
+  "name": "Dingo Responsive Router",
+  "description": "Enruta entre la aplicacion movil y la de escritorio basado en el tamano de pantalla.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
