@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 const MOBILE_URL = 'https://dingo-mobile-last.vercel.app/';
-const DESKTOP_URL = 'https://dingo-desktop.vercel.app/';
+const DESKTOP_URL = 'https://dingo-desktop-new.vercel.app/';
 // Definimos el punto de quiebre para considerar una pantalla como "Móvil" o "Escritorio"
 const MOBILE_BREAKPOINT = 768;
 
