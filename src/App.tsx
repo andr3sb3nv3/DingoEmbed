@@ -1,41 +1,49 @@
-import { useState, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useState } from "react";
 
-const MOBILE_URL = 'https://dingo-mobile-last.vercel.app/';
-const DESKTOP_URL = 'https://dingo-desktop-new.vercel.app/';
-// Definimos el punto de quiebre para considerar una pantalla como "Móvil" o "Escritorio"
-const MOBILE_BREAKPOINT = 768;
+/**
+ * Dingo unificado: una sola app con las dos versiones del sitio adentro.
+ *
+ * Antes eran tres proyectos: la versión de escritorio, la de celular y un
+ * enrutador que cargaba una u otra en un iframe según el ancho de pantalla.
+ * Acá el corte es el mismo (768px) pero se hace en el código, sin iframes:
+ * por debajo se muestra src/celular y por encima src/escritorio.
+ *
+ * Cada versión se carga recién cuando hace falta, así en celular no se baja
+ * el código de escritorio y al revés.
+ */
+const Escritorio = lazy(() => import("./escritorio/App"));
+const Celular = lazy(() => import("./celular/App"));
+
+const CORTE_CELULAR = "(max-width: 767px)";
+
+function useEsCelular() {
+  const [esCelular, setEsCelular] = useState(() => window.matchMedia(CORTE_CELULAR).matches);
+  useEffect(() => {
+    const mq = window.matchMedia(CORTE_CELULAR);
+    const aplicar = () => setEsCelular(mq.matches);
+    aplicar();
+    mq.addEventListener("change", aplicar);
+    return () => mq.removeEventListener("change", aplicar);
+  }, []);
+  return esCelular;
+}
 
 export default function App() {
-  const [isMobile, setIsMobile] = useState<boolean>(() => window.innerWidth < MOBILE_BREAKPOINT);
-
-  useEffect(() => {
-    const checkScreenSize = () => {
-      const currentlyMobile = window.innerWidth < MOBILE_BREAKPOINT;
-      setIsMobile(currentlyMobile);
-    };
-
-    // Verificar cada 5 minutos (5 * 60 * 1000 milisegundos)
-    const intervalId = setInterval(checkScreenSize, 5 * 60 * 1000);
-
-    // Adicionalmente, verificamos cuando se redimensiona la ventana para mejor experiencia
-    window.addEventListener('resize', checkScreenSize);
-
-    return () => {
-      clearInterval(intervalId);
-      window.removeEventListener('resize', checkScreenSize);
-    };
-  }, []);
-
-  const currentUrl = isMobile ? MOBILE_URL : DESKTOP_URL;
+  const esCelular = useEsCelular();
 
   return (
-    <div className="w-screen h-screen overflow-hidden bg-black">
-      <iframe
-        src={currentUrl}
-        className="w-full h-full border-none"
-        title="Dingo Application"
-        allow="camera; microphone; geolocation; fullscreen"
-      />
-    </div>
+    <Suspense fallback={<div className="min-h-screen bg-[#eaeded]" />}>
+      {/* La clase de cada versión le da sus tipografías y sus animaciones
+          propias (ver index.css). */}
+      {esCelular ? (
+        <div className="dingo-celular">
+          <Celular />
+        </div>
+      ) : (
+        <div className="dingo-escritorio">
+          <Escritorio />
+        </div>
+      )}
+    </Suspense>
   );
 }
