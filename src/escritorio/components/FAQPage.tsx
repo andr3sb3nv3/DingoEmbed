@@ -10,10 +10,10 @@ export default function FAQPage({ lang, onGoBack, onContactClick }: { lang: 'es'
       title_en: "Most Popular Questions",
       items: [
         {
-          q_es: "¿Qué servicios ofrece Dingo PPC para vender en Amazon?",
-          q_en: "What services does Dingo PPC offer for selling on Amazon?",
-          a_es: "Dingo PPC ofrece gestión de campañas publicitarias, optimización de listados, investigación de palabras clave, análisis de la competencia y estrategias de crecimiento para maximizar las ventas y la rentabilidad en Amazon.",
-          a_en: "Dingo PPC provides ad campaign management, listing optimization, keyword research, competitor analysis, and growth strategies to maximize sales and profitability on Amazon."
+          q_es: "¿Qué servicios ofrecen para vender en Amazon?",
+          q_en: "What services do you offer for selling on Amazon?",
+          a_es: "Ofrecemos gestión de campañas publicitarias, optimización de listados, investigación de palabras clave, análisis de la competencia y estrategias de crecimiento para maximizar las ventas y la rentabilidad en Amazon.",
+          a_en: "We provide ad campaign management, listing optimization, keyword research, competitor analysis, and growth strategies to maximize sales and profitability on Amazon."
         },
         {
           q_es: "¿Cómo pueden ayudarme a mejorar mis ventas en Amazon?",
@@ -87,8 +87,8 @@ export default function FAQPage({ lang, onGoBack, onContactClick }: { lang: 'es'
           </h1>
           <p className="text-sm md:text-base font-medium opacity-80 max-w-2xl mt-4 leading-relaxed">
             {lang === 'es' 
-              ? "Encuentra respuestas rápidas sobre Dingo y nuestros servicios."
-              : "Quick help regarding Dingo services and agency expertise."}
+              ? "Encuentra respuestas rápidas sobre nuestros servicios."
+              : "Quick help regarding our services and agency expertise."}
           </p>
         </div>
       </div>

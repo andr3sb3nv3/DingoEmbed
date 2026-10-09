@@ -43,7 +43,7 @@ export default function PreviousContactForm({ lang }: PreviousContactFormProps) 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Dingo Previous Contact Form submitted:", formData);
+    console.log("Previous Contact Form submitted:", formData);
     alert(lang === "es" ? "¡Mensaje listo para enviar!" : "Message ready to send!");
   };
 

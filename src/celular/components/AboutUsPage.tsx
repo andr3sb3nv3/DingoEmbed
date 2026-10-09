@@ -114,8 +114,8 @@ export default function AboutUsPage({ lang, onGoBack }: AboutUsPageProps) {
               className="text-base sm:text-lg text-[#102135]/75 font-semibold leading-relaxed"
             >
               {lang === "es"
-                ? "Dingo es una agencia líder especializada en publicidad y crecimiento estratégico para Amazon. Combinamos tecnologías sofisticadas y consultoría especializada de primer nivel para llevar a las marcas al siguiente nivel de rentabilidad y escala."
-                : "Dingo is an execution-led growth agency specialized in high-performance Amazon advertising. We combine cutting-edge technology and premium consulting to guide brands toward sustained profitability and market dominance."}
+                ? "Somos una agencia líder especializada en publicidad y crecimiento estratégico para Amazon. Combinamos tecnologías sofisticadas y consultoría especializada de primer nivel para llevar a las marcas al siguiente nivel de rentabilidad y escala."
+                : "We are an execution-led growth agency specialized in high-performance Amazon advertising. We combine cutting-edge technology and premium consulting to guide brands toward sustained profitability and market dominance."}
             </motion.p>
             <div className="h-1.5 w-24 bg-[#f90] rounded-full" />
           </div>
@@ -167,8 +167,8 @@ export default function AboutUsPage({ lang, onGoBack }: AboutUsPageProps) {
           <div className="text-center mb-10">
             <h2 className="text-2xl sm:text-3xl font-black text-[#102135] mb-2 tracking-tight">
               {lang === "es"
-                ? "Por Qué Elegir Dingo"
-                : "Why Modern Brands Choose Dingo"}
+                ? "Por Qué Elegirnos"
+                : "Why Modern Brands Choose Us"}
             </h2>
             <div className="w-16 h-1 bg-[#f90] mx-auto rounded-full" />
           </div>

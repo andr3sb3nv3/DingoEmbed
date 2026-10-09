@@ -4,7 +4,6 @@ import { motion, useScroll, useTransform, useSpring } from "motion/react";
 import EcosistemaCanales from "./EcosistemaCanales";
 import VentajasAmazon from "./VentajasAmazon";
 import InfluencerMarketingStory from "./InfluencerMarketingStory";
-import DingoOnboardingSection from "./DingoOnboardingSection";
 import { optimizeCloudinaryUrl } from "../utils";
 
 // Service details data structured for both languages
@@ -518,9 +517,6 @@ export default function ServiceDetailPage({ serviceSlug, lang, onGoBack, onConta
             />
           </div>
 
-          {["amazon-google-meta", "amazon-solutions", "google-meta-ads"].includes(serviceSlug) && (
-            <DingoOnboardingSection lang={lang} />
-          )}
 
         {/* Portfolio Management Section (Compact Aesthetic Grid) */}
         <div className="w-full bg-[#102135] py-14 lg:py-16 relative overflow-hidden mt-16 rounded-[2rem] md:rounded-[3rem] mx-2 sm:mx-4 md:mx-auto max-w-[98%] md:max-w-7xl px-4 md:px-8 xl:px-10 shadow-2xl">

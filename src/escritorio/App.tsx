@@ -1,5 +1,5 @@
 import { motion, useScroll, useMotionValueEvent, AnimatePresence, useMotionValue, useSpring, useAnimationFrame } from "motion/react";
-import { Mail, User, Building, MessageSquare, Send, Smile, Star, TrendingUp, Award, TrendingDown, Target, Globe, Youtube, Twitter, Linkedin, Phone, MapPin, HelpCircle, FileText, Check, ShieldCheck, Percent, ShoppingCart, Zap, Sparkles, Menu, X, History, ChevronUp, ShoppingBag, Code } from "lucide-react";
+import { User, Building, MessageSquare, Send, Smile, Star, TrendingUp, Award, TrendingDown, Target, Globe, Youtube, Twitter, Linkedin, Phone, MapPin, HelpCircle, FileText, Check, ShieldCheck, Percent, ShoppingCart, Zap, Sparkles, Menu, X, History, ChevronUp, ShoppingBag, Code } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import ServiceDetailPage from "./components/ServiceDetailPage";
 import ContactPage from "./components/ContactPage";
@@ -518,7 +518,7 @@ const translationsList = {
     placeholderEmail: "contacto@tuempresa.com",
     placeholderMessage: "¿En qué podemos ayudarte para potenciar tus ventas y presencia de marca?",
     btnSend: "Enviar Mensaje",
-    consentText: "Al enviar este formulario, aceptas que Dingo se contacte contigo.",
+    consentText: "Al enviar este formulario, aceptas que nos contactemos contigo.",
     footerText: "Sistemas avanzados de adquisición de tráfico y optimización de conversión para marcas globales.",
     footerCopy: "Todos los derechos reservados.",
     footerPrivacy: "Política de Privacidad",
@@ -527,7 +527,7 @@ const translationsList = {
     growDescription: "Ya sea que estés fundando las bases de tu marca en Amazon, buscando un salto de facturación estructural o liderando una consolidación multicanal en Walmart, eBay y Target, optimizamos tus canales para capturar la demanda latente con una precisión quirúrgica. Redefinimos tu retorno de inversión publicitaria a través de un control de datos riguroso.",
     adsTitle: "grow your brand!",
     adsSubtitle: "Anuncios para todos los Sitios y Plataformas",
-    adsDescription: "DINGO es una Agencia de Marketing de Anuncios que ayuda a las marcas a crecer a través de listados optimizados con SEO, campañas de PPC orientadas y estrategias de puja inteligentes. Hemos trabajado con empresas para impulsar la visibilidad, las ventas y la rentabilidad en múltiples plataformas de publicidad como Meta, Google, Tik Tok, Amazon, Mercado Libre entre otras.",
+    adsDescription: "Somos una Agencia de Marketing de Anuncios que ayuda a las marcas a crecer a través de listados optimizados con SEO, campañas de PPC orientadas y estrategias de puja inteligentes. Hemos trabajado con empresas para impulsar la visibilidad, las ventas y la rentabilidad en múltiples plataformas de publicidad como Meta, Google, Tik Tok, Amazon, Mercado Libre entre otras.",
     adsMetricValue: "37 +",
     adsMetricLabel: "Empresas de Confianza",
     whyAmazonTitle: "¿Por qué vender en Amazon?",
@@ -585,7 +585,7 @@ const translationsList = {
     placeholderEmail: "contact@yourcompany.com",
     placeholderMessage: "How can we help you boost your sales and brand presence?",
     btnSend: "Send Message",
-    consentText: "By submitting this form, you agree to be contacted by Dingo.",
+    consentText: "By submitting this form, you agree to be contacted by our team.",
     footerText: "Advanced traffic acquisition and conversion systems for high-growth global platforms.",
     footerCopy: "All rights reserved.",
     footerPrivacy: "Privacy Policy",
@@ -594,7 +594,7 @@ const translationsList = {
     growDescription: "Whether you are establishing your brand's foundation on Amazon, seeking defensive category leadership, or coordinating a multi-channel invasion across Walmart, eBay, and Target, we deploy systemic architectures to capture high-intent demand. We turn ad spend from a cost center into a predictable compounding motor.",
     adsTitle: "grow your brand!",
     adsSubtitle: "Ads for all Sites & Platforms",
-    adsDescription: "DINGO is an Ads Marketing Agency that helps brands grow through SEO optimized listings, targeted PPC campaigns, and smart bidding strategies. We’ve worked with companies to boost visibility, sales, and profitability on mutliple advertising platforms such as Meta, Google, Tik Tok, Amazon, Mercado Libre among others.",
+    adsDescription: "We are an Ads Marketing Agency that helps brands grow through SEO optimized listings, targeted PPC campaigns, and smart bidding strategies. We’ve worked with companies to boost visibility, sales, and profitability on mutliple advertising platforms such as Meta, Google, Tik Tok, Amazon, Mercado Libre among others.",
     adsMetricValue: "37 +",
     adsMetricLabel: "Trusted Companies",
     whyAmazonTitle: "Why should i Sell on Amazon ?",
@@ -775,7 +775,7 @@ export default function App() {
       const serviceParam = urlParams.get('service');
       setSelectedService(serviceParam);
       if (!serviceParam) {
-        document.title = "Dingo | The eCommerce Vanguard";
+        document.title = "The eCommerce Vanguard";
       }
     };
 
@@ -1059,15 +1059,6 @@ export default function App() {
 
   const renderCenterCards = () => (
     <>
-      {/* Logo Card */}
-      <div className="bg-[#eaeded] w-[180px] h-[180px] lg:w-[200px] lg:h-[200px] xl:w-[220px] xl:h-[220px] mx-auto rounded-[2rem] p-6 lg:p-8 shadow-[12px_12px_24px_#c8cbcb,-12px_-12px_24px_#ffffff] flex flex-col items-center justify-center transition-transform hover:-translate-y-2 duration-300 relative group/card shrink-0">
-        <div className="absolute -bottom-2 -right-2 w-3 h-3 bg-[#f90] rotate-45 rounded-sm opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 shadow-sm" />
-        <img 
-          src="https://dingoppc.com/wp-content/uploads/2025/02/Isotipo-dingo.avif" 
-          alt="Dingo Isotipo" 
-          className="w-full h-full object-contain drop-shadow-md brightness-110"
-        />
-      </div>
       
       {/* ROAS Card */}
       <div className="bg-[#eaeded] w-[180px] h-[180px] lg:w-[200px] lg:h-[200px] xl:w-[220px] xl:h-[220px] mx-auto rounded-[2rem] p-5 lg:p-6 shadow-[12px_12px_24px_#c8cbcb,-12px_-12px_24px_#ffffff] flex flex-col justify-between transition-transform hover:-translate-y-2 duration-300 relative group/card shrink-0 text-left">
@@ -1160,12 +1151,6 @@ export default function App() {
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             className="fixed inset-0 z-[60] bg-white flex items-center justify-center pointer-events-auto"
           >
-            <img 
-              src="https://dingoppc.com/wp-content/uploads/2025/04/Tippit-canva-pro-4.png" 
-              alt="Dingo Loading" 
-              className="w-32 sm:w-40 md:w-48 h-auto object-contain drop-shadow-md"
-              loading="eager"
-            />
           </motion.div>
         )}
       </AnimatePresence>
@@ -1195,20 +1180,6 @@ export default function App() {
             
             {/* Left: Brand Logo */}
             <div className="flex items-center shrink-0">
-              <a href="#" onClick={(e) => {
-                e.preventDefault();
-                setMobileMenuOpen(false);
-                if (selectedService) handleGoBack();
-                else window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}>
-                <img 
-                  src={optimizeCloudinaryUrl("https://res.cloudinary.com/dzrqhomvz/image/upload/v1778820431/agxg4ct1cdfiyxbuplyh.png", 200)} 
-                  alt="Dingo Logo" 
-                  className={`object-contain drop-shadow-sm transition-all duration-500 max-h-[85%] ${isScrolled ? 'h-5 sm:h-6' : 'h-6 sm:h-8'}`}
-                  style={isOverDarkBg ? { filter: 'brightness(0) saturate(100%) invert(8%) sepia(21%) saturate(5833%) hue-rotate(195deg) brightness(93%) contrast(92%)' } : {}}
-                  referrerPolicy="no-referrer"
-                />
-              </a>
             </div>
 
             {/* Right: Navigation Items */}
@@ -1801,7 +1772,7 @@ export default function App() {
                         >
                           <img 
                             src={optimizeCloudinaryUrl("https://res.cloudinary.com/dzrqhomvz/image/upload/v1779291160/fmhpubtcndg84fvbqago.png", 1000)} 
-                            alt="Dingo Premium Team & Agency" 
+                            alt="Premium Team & Agency" 
                             className="w-full h-full object-cover select-none pointer-events-none"
                             referrerPolicy="no-referrer"
                             loading="eager"
@@ -2013,11 +1984,11 @@ export default function App() {
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display text-[#102135] tracking-tight mb-8 leading-tight">
               {lang === 'es' ? (
                 <>
-                  Empresas que confiaron en <span className="text-[#f90] font-black drop-shadow-sm hover:scale-105 transition-transform duration-200 inline-block cursor-default">Dingo</span>
+                  Empresas que confiaron en <span className="text-[#f90] font-black drop-shadow-sm hover:scale-105 transition-transform duration-200 inline-block cursor-default">nosotros</span>
                 </>
               ) : (
                 <>
-                  Companies that trusted <span className="text-[#f90] font-black drop-shadow-sm hover:scale-105 transition-transform duration-200 inline-block cursor-default">Dingo</span>
+                  Companies that trusted <span className="text-[#f90] font-black drop-shadow-sm hover:scale-105 transition-transform duration-200 inline-block cursor-default">us</span>
                 </>
               )}
             </h2>
@@ -2111,11 +2082,6 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-14 border-b border-white/10 pb-10">
             {/* Column 1: Brand / Description */}
             <div className="space-y-4">
-              <img 
-                src="https://res.cloudinary.com/dzrqhomvz/image/upload/v1778820431/agxg4ct1cdfiyxbuplyh.png" 
-                alt="Dingo Logo" 
-                className="h-8 object-contain brightness-0 invert"
-              />
               <p className="text-white/70 text-xs sm:text-sm leading-relaxed max-w-sm font-medium">
                 {lang === 'es' 
                   ? "Sistemas avanzados de adquisición de tráfico, modelado financiero de márgenes y optimización SEO para escalar marcas líderes en Amazon y marketplaces globales."
@@ -2212,12 +2178,6 @@ export default function App() {
                   </span>
                   <a href="tel:+1159194932" className="hover:text-[#f90] transition-colors font-bold">+11 59 19 49 32</a>
                 </li>
-                <li className="flex items-center gap-2.5">
-                  <span className="p-1.5 bg-white/5 rounded-lg border border-white/5 shrink-0">
-                    <Mail className="w-3.5 h-3.5 text-[#f90]" />
-                  </span>
-                  <a href="mailto:contacto@dingoppc.com" className="hover:text-[#f90] transition-colors font-bold">contacto@dingoppc.com</a>
-                </li>
                 <li className="flex items-start gap-2.5">
                   <span className="p-1.5 bg-white/5 rounded-lg border border-white/5 shrink-0 mt-0.5">
                     <MapPin className="w-3.5 h-3.5 text-[#f90]" />
@@ -2229,7 +2189,7 @@ export default function App() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-white/40 mt-8 font-semibold">
-            <p>&copy; {new Date().getFullYear()} Dingo. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} All rights reserved.</p>
             <div className="flex gap-4">
               <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-white transition-colors">Terms of Service</a>

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { Mail, MessageCircle, Linkedin, Globe, Send } from "lucide-react";
-import { optimizeCloudinaryUrl } from "../utils";
+import { MessageCircle, Linkedin, Globe, Send } from "lucide-react";
 
 interface NeumorphicContactFormProps {
   lang: "es" | "en";
@@ -24,7 +23,7 @@ export default function NeumorphicContactForm({ lang }: NeumorphicContactFormPro
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Dingo Contact ready to submit:", formData);
+    console.log("Contact ready to submit:", formData);
     // Simple state feedback
     alert(lang === "es" ? "¡Mensaje listo para enviar!" : "Message ready to send!");
   };
@@ -61,25 +60,15 @@ export default function NeumorphicContactForm({ lang }: NeumorphicContactFormPro
                 <h2 className="text-3xl sm:text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none text-[#102135] text-center">
                   {lang === "es" ? translations.connectEs : translations.connectEn}
                 </h2>
-                {/* Línea de acento naranja de Dingo */}
+                {/* Línea de acento naranja */}
                 <div className="h-1 w-12 md:h-1.5 md:w-20 bg-[#f90] mx-auto rounded-full shadow-[0_2px_8px_rgba(255,153,0,0.4)]" />
               </div>
               
-              {/* Contenedor del logotipo hundido (Neumorfismo Invertido) */}
-              <div className="p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] bg-[#e0e5ec] shadow-[inset_4px_4px_8px_#b8b9be,inset_-4px_-4px_8px_#ffffff] md:shadow-[inset_8px_8px_16px_#b8b9be,inset_-8px_-8px_16px_#ffffff] flex items-center justify-center">
-                <img 
-                  src={optimizeCloudinaryUrl("https://res.cloudinary.com/dzrqhomvz/image/upload/v1778820431/agxg4ct1cdfiyxbuplyh.png", 300)} 
-                  alt="Dingo Logotipo" 
-                  className="h-12 sm:h-16 md:h-24 w-auto object-contain select-none pointer-events-none"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
             </div>
             
             {/* Botones Sociales Neumórficos */}
             <div className="flex gap-4 sm:gap-6 justify-center flex-wrap">
               {[
-                { icon: Mail, href: "mailto:business@dingo-agency.com", label: "Email" },
                 { icon: MessageCircle, href: "https://wa.me/5491165088135", label: "WhatsApp" },
                 { icon: Linkedin, href: "#", label: "LinkedIn" },
                 { icon: Globe, href: "/", label: "Website" },
@@ -164,7 +153,7 @@ export default function NeumorphicContactForm({ lang }: NeumorphicContactFormPro
                 />
               </div>
 
-              {/* Botón de Enviar Impactante de Dingo */}
+              {/* Botón de Enviar Impactante */}
               <button 
                 type="submit"
                 className="w-full py-4 md:py-6 bg-[#f90] rounded-xl md:rounded-2xl font-black text-[#102135] uppercase tracking-[0.15em] md:tracking-[0.4em] text-xs md:text-sm

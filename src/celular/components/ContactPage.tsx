@@ -128,23 +128,6 @@ export default function ContactPage({ lang, onGoBack }: ContactPageProps) {
                 {/* Info & Booking CTAs Column */}
                 <div className="flex flex-col justify-center space-y-6">
                   
-                  {/* Brand Header */}
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-white/5 border border-white/10 rounded-xl p-2 flex items-center justify-center shadow-md shrink-0">
-                      <img 
-                        src="https://dingoppc.com/wp-content/uploads/2025/02/Isotipo-dingo.avif" 
-                        alt="Dingo Isotipo Logo" 
-                        className="w-full h-full object-contain brightness-110 drop-shadow-[0_2px_8px_rgba(255,153,0,0.35)]"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = "https://res.cloudinary.com/dzrqhomvz/image/upload/v1779216800/bfrhro8muvrtntysh0o5.png";
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-black text-white tracking-wider leading-none">DINGO</h3>
-                      <span className="text-[8px] font-mono font-bold uppercase text-[#f90] tracking-widest mt-0.5 block">Amazon Growth Partner</span>
-                    </div>
-                  </div>
 
                   {/* Text Description */}
                   <div className="space-y-2">
@@ -190,7 +173,7 @@ export default function ContactPage({ lang, onGoBack }: ContactPageProps) {
                 <div className="relative w-full h-64 md:h-80 rounded-2xl overflow-hidden border border-white/10 shadow-xl group">
                   <img 
                     src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" 
-                    alt="Dingo strategic human growth"
+                    alt="Strategic human growth"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#102135]/95 via-transparent to-transparent" />

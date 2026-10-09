@@ -129,18 +129,6 @@ const ConveyorBelt = ({
           animation: 'dingoBeltMove var(--belt-speed) linear infinite',
         }}
       >
-        <div className="absolute inset-0 flex items-center overflow-hidden pointer-events-none">
-          <div className="dingo-belt-word-track flex items-center whitespace-nowrap">
-            {Array.from({ length: 8 }).map((_, idx) => (
-              <span
-                key={idx}
-                className="w-[216px] lg:w-[288px] shrink-0 text-center text-[#F5C518]/18 font-black tracking-[0.42em] text-[34px] md:text-[42px] lg:text-[48px] uppercase select-none"
-              >
-                DINGO
-              </span>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
 
@@ -161,7 +149,7 @@ const ConveyorBelt = ({
       </button>
       
       <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 bg-[#1c1f26] text-[#F5C518] font-mono font-black text-[7px] md:text-[8px] px-2 py-0.5 tracking-[0.2em] uppercase rounded-[1px] shadow-sm whitespace-nowrap z-10 font-bold">
-        Dingo Logistics
+        {lang === "es" ? "Logística" : "Logistics"}
       </div>
 
       <div className="absolute right-[6%] sm:right-[10%] top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-auto z-20 lg:hidden">
@@ -290,12 +278,6 @@ const ServiceCrate = ({ item, index, total, lang, width, isRotated }: {
             border: '1px solid #B08A55',
           }}
         >
-          {/* Logo de Dingo en forma de marca de agua (como stencil / sombreado) */}
-          <div className="absolute top-3.5 left-5 select-none pointer-events-none opacity-[0.22] text-[#232F3E]">
-            <span className="font-sans font-black tracking-[0.25em] text-[15px] md:text-lg uppercase">
-              dingo
-            </span>
-          </div>
 
           {/* Número estampado a stencil */}
           <span className="absolute top-1 right-3 font-mono font-black text-5xl md:text-6xl text-[#232F3E] opacity-[0.13] pointer-events-none">
@@ -729,12 +711,7 @@ export default function VentajasAmazon({ serviceSlug = "amazon-solutions", lang,
   };
 
   const handleContact = () => {
-    if (onContactClick) {
-      onContactClick();
-    } else {
-      const email = "hola@dingoppc.com";
-      window.location.href = `mailto:${email}?subject=Amazon Solutions Consultation`;
-    }
+    onContactClick?.();
   };
 
   // --- 1. DEFINICIÓN DE LOS 9 BENEFICIOS / SERVICIOS DE AMAZON SOLUTIONS ---

@@ -278,7 +278,7 @@ export default function SuccessStoriesPage({ lang, onGoBack, onContactClick }: S
                             <div className="space-y-3">
                               <h4 className="text-xs font-extrabold uppercase tracking-widest text-[#102135]/70 flex items-center gap-1.5">
                                 <Award className="w-4 h-4 text-[#f90]" />
-                                {lang === 'es' ? "Estrategia Dingo" : "Dingo Strategy Matrix"}
+                                {lang === 'es' ? "Estrategia" : "Strategy Matrix"}
                               </h4>
                               <ul className="space-y-2.5">
                                 {(lang === 'es' ? study.strategyEs : study.strategyEn).map((point, i) => (

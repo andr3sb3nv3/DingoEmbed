@@ -17,8 +17,8 @@ export default function FaqPage({
 
   const faqItems = [
     {
-      q_es: "¿Qué servicios ofrece Dingo para las marcas en Amazon?",
-      q_en: "What services does Dingo offer to Amazon brands?",
+      q_es: "¿Qué servicios ofrecen para las marcas en Amazon?",
+      q_en: "What services do you offer to Amazon brands?",
       a_es: "Ofrecemos soluciones integrales de crecimiento para vendedores en Amazon, que incluyen gestión experta de PPC, optimización SEO de listados, fotografía y branding profesional de productos, y consultoría de salud de inventario y cuentas.",
       a_en: "We offer comprehensive growth solutions for Amazon sellers, including expert PPC management, listings SEO optimization, professional product photography & branding, and inventory/account health consulting.",
     },
@@ -105,8 +105,8 @@ export default function FaqPage({
 
           <p className="text-white/70 max-w-xl mx-auto text-sm sm:text-base md:text-lg font-medium">
             {lang === "es"
-              ? "Encuentra respuestas rápidas sobre Dingo y nuestros servicios estructurados de crecimiento."
-              : "Quick help regarding Dingo services, audits, and our structured growth framework."}
+              ? "Encuentra respuestas rápidas sobre nuestros servicios estructurados de crecimiento."
+              : "Quick help regarding our services, audits, and our structured growth framework."}
           </p>
         </div>
 

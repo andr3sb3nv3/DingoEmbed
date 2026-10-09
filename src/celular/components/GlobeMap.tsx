@@ -16,7 +16,7 @@ export default function GlobeMap({ lang }: GlobeMapProps) {
     >
       {/* Integración del Mapa Líquido a todo color */}
       <iframe 
-        title="Dingo Headquarters Palermo Buenos Aires location map"
+        title="Palermo Buenos Aires location map"
         src={standardMapUrl} 
         width="100%" 
         height="100%" 
@@ -36,7 +36,7 @@ export default function GlobeMap({ lang }: GlobeMapProps) {
         <div className="flex items-center gap-2 bg-[#102135] text-white px-3.5 py-2 rounded-xl shadow-lg border border-white/10 backdrop-blur-md">
           <MapPin className="w-4 h-4 text-[#f90] animate-bounce" />
           <span className="text-xs font-black tracking-wide">
-            {lang === 'es' ? "Dingo Palermo" : "Dingo Palermo HQ"}
+            {lang === 'es' ? "Palermo" : "Palermo HQ"}
           </span>
         </div>
       </div>

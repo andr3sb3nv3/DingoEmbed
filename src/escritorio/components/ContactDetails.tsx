@@ -1,5 +1,5 @@
 import React from "react";
-import { MapPin, Mail, Phone, Clock } from "lucide-react";
+import { MapPin, Phone, Clock } from "lucide-react";
 
 interface ContactDetailsProps {
   lang: 'es' | 'en';
@@ -35,28 +35,6 @@ export default function ContactDetails({ lang }: ContactDetailsProps) {
         {/* Canales Directos Inteligentes */}
         <div className="space-y-4 pt-6 border-t border-neutral-100">
           
-          {/* Loseta de Correo */}
-          <a 
-            href="mailto:business@dingo-agency.com" 
-            className="group flex items-center justify-between p-4 bg-slate-50/50 hover:bg-[#102135] rounded-2xl border border-slate-100 hover:border-[#102135] transition-all duration-300 shadow-sm"
-          >
-            <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-white group-hover:bg-white/10 flex items-center justify-center border border-slate-200/60 group-hover:border-transparent transition-all shadow-sm">
-                <Mail className="w-4 h-4 text-[#102135] group-hover:text-[#f90]" />
-              </div>
-              <div className="text-left">
-                <span className="text-[9px] font-mono text-[#102135]/50 group-hover:text-white/60 font-black uppercase tracking-wider block">
-                  {lang === 'es' ? "CORREO DIRECTO" : "EMAIL INBOX"}
-                </span>
-                <span className="text-xs sm:text-sm font-black text-[#102135] group-hover:text-white tracking-wide transition-colors">
-                  business@dingo-agency.com
-                </span>
-              </div>
-            </div>
-            <div className="text-[#102135]/30 group-hover:text-[#f90] text-sm font-black select-none pr-2 group-hover:translate-x-1.5 transition-transform duration-300">
-              →
-            </div>
-          </a>
 
           {/* Loseta de WhatsApp */}
           <a 

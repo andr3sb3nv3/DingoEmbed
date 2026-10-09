@@ -41,7 +41,7 @@ export default function ProjectCodeViewer({ lang }: ProjectCodeViewerProps) {
           <span className="font-mono text-xs font-black text-slate-200 tracking-wide uppercase flex items-center gap-1.5">
             {lang === "es" ? "Código del Proyecto" : "Project Source Code"} 
             <span className="text-[10px] bg-amber-500/10 text-amber-500 border border-amber-500/20 px-2 py-0.5 rounded">
-              dingo-ppc-amazon
+              ppc-amazon
             </span>
           </span>
         </div>

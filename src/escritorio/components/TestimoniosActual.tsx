@@ -6,31 +6,30 @@ import { ChevronLeft, ChevronRight, Star, Recycle, ArrowUp } from 'lucide-react'
 const TESTIMONIALS_DATA = [
   {
     tagEs: "Agencia Estratégica", tagEn: "Strategic Agency",
-    textEs: "Trabajar con Dingo PPC fue una experiencia transformadora para nuestra marca. Su experiencia en publicidad de Amazon y estrategias inteligentes nos ayudó a mantenernos por delante de la competencia y aumentó significativamente nuestro rendimiento en la plataforma. Brindaron un apoyo excepcional, comunicación clara y perspectivas valiosas en cada etapa. Su enfoque personalizado ha llevado a un crecimiento sostenido y una mejor rentabilidad. Los recomiendo altamente.",
-    textEn: "Working with Dingo PPC was a transformative experience for our brand. Their expertise in Amazon advertising and smart bidding strategies helped us stay ahead of competitors and significantly boosted our performance on the platform. They provided exceptional support, clear communication, and valuable insights every step of the way. Their tailored approach has led to sustained growth and improved profitability. Highly recommend them.",
+    textEs: "Trabajar con este equipo fue una experiencia transformadora para nuestra marca. Su experiencia en publicidad de Amazon y estrategias inteligentes nos ayudó a mantenernos por delante de la competencia y aumentó significativamente nuestro rendimiento en la plataforma. Brindaron un apoyo excepcional, comunicación clara y perspectivas valiosas en cada etapa. Su enfoque personalizado ha llevado a un crecimiento sostenido y una mejor rentabilidad. Los recomiendo altamente.",
+    textEn: "Working with this team was a transformative experience for our brand. Their expertise in Amazon advertising and smart bidding strategies helped us stay ahead of competitors and significantly boosted our performance on the platform. They provided exceptional support, clear communication, and valuable insights every step of the way. Their tailored approach has led to sustained growth and improved profitability. Highly recommend them.",
     name: "Agustin Janoter",
     roleEs: "CEO, Marsip", roleEn: "CEO, Marsip",
     image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=150&q=80"
   },
   {
     tagEs: "Optimización de Campañas", tagEn: "Campaign Optimization",
-    textEs: "Nos asociamos con Dingo PPC para optimizar nuestras campañas de Amazon, y los resultados han sido sobresalientes. Su profundo conocimiento de la plataforma de Amazon y sus estrategias expertas llevaron a un aumento de ventas y visibilidad. Su equipo es profesional, receptivo y está comprometido a entregar resultados tangibles. Recomiendo encarecidamente sus servicios.",
-    textEn: "We partnered with Dingo PPC to optimize our Amazon campaigns, and the results have been outstanding. Their deep understanding of Amazon's platform and expert strategies led to a significant increase in sales and visibility. Their team is professional, responsive, and committed to delivering tangible results. Highly recommend their services for anyone looking to scale their Amazon business effectively.",
+    textEs: "Nos asociamos con ellos para optimizar nuestras campañas de Amazon, y los resultados han sido sobresalientes. Su profundo conocimiento de la plataforma de Amazon y sus estrategias expertas llevaron a un aumento de ventas y visibilidad. Su equipo es profesional, receptivo y está comprometido a entregar resultados tangibles. Recomiendo encarecidamente sus servicios.",
+    textEn: "We partnered with this team to optimize our Amazon campaigns, and the results have been outstanding. Their deep understanding of Amazon's platform and expert strategies led to a significant increase in sales and visibility. Their team is professional, responsive, and committed to delivering tangible results. Highly recommend their services for anyone looking to scale their Amazon business effectively.",
     name: "Ezequiel Ramirez",
     roleEs: "Shapermint", roleEn: "Shapermint",
     image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&q=80"
   },
   {
     tagEs: "Crecimiento y Escala", tagEn: "Growth & Scaling",
-    textEs: "Dingo PPC ha sido un cambio radical para nuestro negocio en Amazon. Su equipo se tomó el tiempo para comprender nuestra marca y diseñó una estrategia que maximizó nuestro retorno de la inversión publicitaria (ROAS). Hemos visto una mejora notable en tráfico, conversiones y ventas en general. No son solo un proveedor de servicios, son un verdadero socio en nuestro crecimiento. No podríamos estar más satisfechos.",
-    textEn: "Dingo PPC has been a game-changer for our Amazon business. Their team took the time to understand our brand and tailored a strategy that maximized our return on ad spend (ROAS). We've seen a noticeable improvement in traffic, conversions, and overall sales. They're not just a service provider—they're a true partner in our growth. We couldn't be more satisfied with the results.",
+    textEs: "Su equipo ha sido un cambio radical para nuestro negocio en Amazon. Su equipo se tomó el tiempo para comprender nuestra marca y diseñó una estrategia que maximizó nuestro retorno de la inversión publicitaria (ROAS). Hemos visto una mejora notable en tráfico, conversiones y ventas en general. No son solo un proveedor de servicios, son un verdadero socio en nuestro crecimiento. No podríamos estar más satisfechos.",
+    textEn: "This team has been a game-changer for our Amazon business. Their team took the time to understand our brand and tailored a strategy that maximized our return on ad spend (ROAS). We've seen a noticeable improvement in traffic, conversions, and overall sales. They're not just a service provider—they're a true partner in our growth. We couldn't be more satisfied with the results.",
     name: "Mellisa J.",
     roleEs: "Brookthorne", roleEn: "Brookthorne",
     image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80"
   }
 ];
 
-const LOGO_URL = "https://res.cloudinary.com/dzrqhomvz/image/upload/v1778820431/agxg4ct1cdfiyxbuplyh.png";
 
 const mod = (n: number, m: number) => ((n % m) + m) % m;
 
@@ -76,18 +75,6 @@ const ConveyorBelt = ({ lang, isShifting }: { lang: "es" | "en", isShifting: boo
           animation: 'dingoBeltMove var(--belt-speed) linear infinite',
         }}
       >
-        <div className="absolute inset-0 flex items-center overflow-hidden pointer-events-none">
-          <div className="dingo-belt-word-track flex items-center whitespace-nowrap">
-            {Array.from({ length: 14 }).map((_, idx) => (
-              <span
-                key={idx}
-                className="w-[216px] lg:w-[288px] shrink-0 text-center text-[#F5C518]/18 font-black tracking-[0.42em] text-[34px] md:text-[42px] lg:text-[48px] uppercase select-none"
-              >
-                DINGO
-              </span>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
 
@@ -104,7 +91,7 @@ const ConveyorBelt = ({ lang, isShifting }: { lang: "es" | "en", isShifting: boo
         {lang === "es" ? "Cinta 04" : "Belt 04"}
       </div>
       <div className="absolute right-[13%] top-1/2 -translate-y-1/2 bg-[#1c1f26] text-[#F5C518] font-mono font-black text-[7px] md:text-[9px] px-1.5 md:px-2 py-0.5 md:py-1 tracking-[0.2em] uppercase rounded-[1px] shadow-sm">
-        Dingo Logistics
+        {lang === "es" ? "Logística" : "Logistics"}
       </div>
       {/* Franja de seguridad amarilla y negra */}
       <div
@@ -145,13 +132,6 @@ const TestimonialFace = ({ data, lang }: { data: typeof TESTIMONIALS_DATA[0], la
   <>
     {/* Logo + smile impresos en tinta sobre el cartón */}
     <div className="absolute top-4 md:top-6 inset-x-0 flex flex-col items-center pointer-events-none">
-      <img
-        src={LOGO_URL}
-        alt="Dingo"
-        className="h-5 md:h-7"
-        style={{ filter: 'brightness(0)', opacity: 0.82 }}
-        draggable="false"
-      />
       <SmileArrow className="w-16 md:w-24 mt-0.5 opacity-80" color="#232F3E" strokeWidth={9} />
     </div>
 
@@ -247,13 +227,6 @@ const HandlingMark = ({ lang }: { lang: "es" | "en" }) => (
     <span className="font-mono text-[7px] md:text-[8px] font-bold uppercase tracking-[0.25em] mt-2">
       {lang === "es" ? "Este lado arriba" : "This side up"}
     </span>
-    <img
-      src={LOGO_URL}
-      alt=""
-      className="h-4 md:h-5 mt-8 md:mt-10"
-      style={{ filter: 'brightness(0)', opacity: 0.55 }}
-      draggable="false"
-    />
   </div>
 );
 
@@ -325,7 +298,7 @@ const PackageBox = ({ frontData, backData, showBack, lang, dims }: {
             <div className="relative w-full h-10 md:h-12 bg-[#1A2433] flex items-center overflow-hidden whitespace-nowrap shadow-[0_2px_6px_rgba(60,35,10,0.35)]">
               {Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="flex items-center gap-2 mx-3 md:mx-4 shrink-0">
-                  <span className="text-white text-[11px] md:text-[13px] font-black lowercase tracking-tight">dingo prime</span>
+                  <span className="text-white text-[11px] md:text-[13px] font-black lowercase tracking-tight">express</span>
                   <SmileArrow className="w-6 md:w-8" color="#FF9900" strokeWidth={11} />
                 </div>
               ))}
