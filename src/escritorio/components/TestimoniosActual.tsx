@@ -144,7 +144,7 @@ const TestimonialFace = ({ data, lang }: { data: typeof TESTIMONIALS_DATA[0], la
         </span>
       </div>
       <span className="font-mono text-[6px] md:text-[7px] font-bold tracking-[0.2em] uppercase">
-        AR-BUE · DNGO
+        AR-BUE
       </span>
     </div>
 
@@ -206,7 +206,7 @@ const TestimonialFace = ({ data, lang }: { data: typeof TESTIMONIALS_DATA[0], la
             style={{ background: 'repeating-linear-gradient(90deg, #102135 0px, #102135 2px, transparent 2px, transparent 4px, #102135 4px, #102135 5px, transparent 5px, transparent 9px)' }}
           />
           <span className="font-mono text-[6px] md:text-[7px] font-bold tracking-[0.2em] text-slate-400 mt-1">
-            DNGO-{String(TESTIMONIALS_DATA.indexOf(data) + 1).padStart(4, '0')}
+            REF-{String(TESTIMONIALS_DATA.indexOf(data) + 1).padStart(4, '0')}
           </span>
         </div>
       </div>

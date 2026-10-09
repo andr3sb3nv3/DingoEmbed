@@ -94,9 +94,9 @@ const ConveyorBelt = ({
 }) => (
   <div
     className="absolute left-1/2 -translate-x-1/2 w-screen z-0 pointer-events-none select-none"
-    style={{ top: 'calc(100% - 44px)', ['--belt-speed' as any]: isShifting ? '0.3s' : '1.15s' }}
+    style={{ top: 'calc(100% - 44px)', ['--belt-speed' as any]: '0.6s' }}
   >
-    {/* Superficie de goma */}
+    {/* Superficie de la cinta */}
     <div style={{ perspective: '600px' }}>
       <div
         className="dingo-belt-anim w-full h-[90px]"
@@ -104,22 +104,23 @@ const ConveyorBelt = ({
           transform: 'rotateX(55deg)',
           transformOrigin: 'center bottom',
           backgroundImage: [
-            'repeating-linear-gradient(90deg, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 3px, transparent 3px, transparent 72px)',
-            'linear-gradient(180deg, #434b58 0%, #2a3038 100%)'
+            'repeating-linear-gradient(90deg, rgba(16,33,53,0.06) 0px, rgba(16,33,53,0.06) 1px, transparent 1px, transparent 72px)',
+            'linear-gradient(180deg, #e4e8ec 0%, #cdd3da 100%)'
           ].join(', '),
-          boxShadow: 'inset 0 10px 22px rgba(0,0,0,0.40), inset 0 -5px 12px rgba(0,0,0,0.35)',
-          borderTop: '2px solid rgba(255,255,255,0.16)',
+          boxShadow: 'inset 0 8px 18px rgba(16,33,53,0.10), inset 0 -2px 6px rgba(16,33,53,0.08)',
+          borderTop: '1px solid rgba(255,255,255,0.9)',
           animation: 'dingoBeltMove var(--belt-speed) linear infinite',
+          animationPlayState: isShifting ? 'running' : 'paused',
         }}
       />
     </div>
 
-    {/* Frente metálico con bulones */}
+    {/* Frente de la plataforma */}
     <div
-      className="relative w-full h-8 md:h-10 border-t border-white/25"
+      className="relative w-full h-8 md:h-10 border-t-2 border-[#f90]"
       style={{
-        backgroundImage: 'radial-gradient(circle 2px at 50% 30%, rgba(0,0,0,0.45) 0px 2px, transparent 2.4px), linear-gradient(180deg, #525a68 0%, #3a414c 60%, #333944 100%)',
-        backgroundSize: '52px 100%, 100% 100%',
+        background: 'linear-gradient(180deg, #1b2f47 0%, #102135 100%)',
+        boxShadow: '0 24px 40px -18px rgba(16,33,53,0.45)',
       }}
     >
       <button
@@ -130,9 +131,6 @@ const ConveyorBelt = ({
         <ArrowLeft className="w-5.5 h-5.5 md:w-4.5 md:h-4.5 stroke-[2.5px] text-slate-950" />
       </button>
       
-      <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 bg-[#1c1f26] text-[#F5C518] font-mono font-black text-[7px] md:text-[8px] px-2 py-0.5 tracking-[0.2em] uppercase rounded-[1px] shadow-sm whitespace-nowrap z-10 font-bold">
-        {lang === "es" ? "Logística" : "Logistics"}
-      </div>
 
       <div className="absolute right-[6%] sm:right-[10%] top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-auto z-20 lg:hidden">
         <button
@@ -152,33 +150,6 @@ const ConveyorBelt = ({
         </button>
       </div>
 
-      <div
-        className="absolute bottom-0 inset-x-0 h-[4px] md:h-[5px]"
-        style={{ background: 'repeating-linear-gradient(45deg, #F5C518 0px, #F5C518 10px, #1c1f26 10px, #1c1f26 20px)' }}
-      />
-    </div>
-
-    {/* Rodillos a la vista */}
-    <div
-      className="dingo-belt-anim w-full h-3.5 md:h-4"
-      style={{
-        backgroundColor: '#11151b',
-        backgroundImage: 'radial-gradient(circle 5px at 14px 50%, #1d232c 0px 3.8px, #39404d 4.2px, transparent 5.4px)',
-        backgroundSize: '28px 100%',
-        boxShadow: 'inset 0 3px 6px rgba(0,0,0,0.6)',
-        animation: 'dingoBeltMove var(--belt-speed) linear infinite',
-      }}
-    />
-
-    {/* Patas */}
-    <div className="relative w-full h-8 md:h-10">
-      {[8, 32, 56, 80].map((p) => (
-        <div
-          key={p}
-          className="absolute top-0 w-4 md:w-6 h-full"
-          style={{ left: `${p}%`, background: 'linear-gradient(90deg, #4d5563 0%, #2e333d 70%)' }}
-        />
-      ))}
     </div>
   </div>
 );
@@ -258,25 +229,11 @@ const ServiceCrate = ({ item, index, total, lang, width, isRotated }: {
           }}
         >
 
-          {/* Número estampado a stencil */}
-          <span className="absolute top-1 right-3 font-mono font-black text-5xl md:text-6xl text-[#232F3E] opacity-[0.13] pointer-events-none">
-            {String(index + 1).padStart(2, '0')}
-          </span>
 
-          {/* Códigos de imprenta */}
-          <div className="absolute bottom-1.5 inset-x-3 md:inset-x-4 flex items-center justify-between pointer-events-none opacity-50 text-[#4a3015]">
-            <div className="flex items-center gap-1">
-              <Recycle className="w-2.5 h-2.5" strokeWidth={2.5} />
-              <span className="font-mono text-[6px] font-bold tracking-[0.2em] uppercase">
-                {lang === "es" ? "Caja 100% reciclable" : "100% recyclable box"}
-              </span>
-            </div>
-            <span className="font-mono text-[6px] font-bold tracking-[0.2em] uppercase">AR-BUE · DNGO</span>
-          </div>
 
           {/* Etiqueta blanca de envío */}
           <div
-            className="absolute inset-x-4 md:inset-x-6 top-9 md:top-10 bottom-6 -rotate-1 bg-[#FDFDF8] rounded-[3px] p-3.5 md:p-4.5 flex flex-col text-left"
+            className="absolute inset-x-4 md:inset-x-6 top-9 md:top-10 bottom-6 bg-[#FDFDF8] rounded-[3px] p-3.5 md:p-4.5 flex flex-col text-left"
             style={{ boxShadow: '0 7px 18px rgba(80,45,15,0.26), 0 1px 0 rgba(255,255,255,0.5) inset' }}
           >
             <div className="flex justify-between items-center gap-2">
@@ -310,7 +267,7 @@ const ServiceCrate = ({ item, index, total, lang, width, isRotated }: {
 
             <div className="flex items-center justify-between">
               <span className="font-mono text-[7px] md:text-[8px] font-bold tracking-[0.2em] text-slate-400 uppercase">
-                DNGO-AMZ-{String(index + 1).padStart(2, '0')}
+                AMZ-{String(index + 1).padStart(2, '0')}
               </span>
               <div
                 className="h-4.5 md:h-5.5 w-12 md:w-16"
@@ -344,9 +301,6 @@ const ServiceCrate = ({ item, index, total, lang, width, isRotated }: {
             <div className="h-full w-[2px] bg-[#FF9900]/40" />
           </div>
 
-          <span className="absolute top-1 right-3 font-mono font-black text-5xl md:text-6xl text-[#232F3E] opacity-[0.13] pointer-events-none">
-            {String(index + 1).padStart(2, '0')}
-          </span>
 
           {/* Cara de integración: los carteles flotantes se apoyan visualmente sobre este lado al rotar */}
           <div
@@ -384,7 +338,7 @@ const ServiceCrate = ({ item, index, total, lang, width, isRotated }: {
               </span>
             </div>
             <div className="font-mono text-[6px] font-bold text-center tracking-[0.2em]">
-              DNGO LOGISTICS CORP · REGIONAL DEPOT
+              REGIONAL DEPOT
             </div>
           </div>
           <div className="absolute inset-0 bg-black/50 pointer-events-none" />
@@ -423,16 +377,8 @@ const ServiceCrate = ({ item, index, total, lang, width, isRotated }: {
         >
           <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-8 bg-[#1A2433] opacity-90 flex items-center justify-center">
             <div className="h-full w-[2px] bg-[#FF9900]/45" />
-            <span className="absolute text-[5px] font-mono font-black text-white/40 tracking-[0.3em] rotate-90 uppercase whitespace-nowrap">
-              DNGO PRIME
-            </span>
           </div>
 
-          <div className="absolute top-4 left-4 w-9 h-9 border border-black/10 p-0.5 flex flex-wrap gap-0.5 opacity-20">
-            {Array.from({ length: 9 }).map((_, i) => (
-              <div key={i} className={`w-2 h-2 ${i % 2 === 0 ? 'bg-black' : 'bg-transparent'}`} />
-            ))}
-          </div>
 
           <div 
             className="absolute inset-0 bg-black/15 pointer-events-none transition-opacity duration-750" 

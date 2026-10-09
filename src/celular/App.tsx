@@ -39,7 +39,7 @@ import Interactive3DDice from "./components/Interactive3DDice";
 import CasosDeExito from "./components/CasosDeExito";
 import EcosistemaCanales from "./components/EcosistemaCanales";
 import FaqPage from "./components/FaqPage";
-import TestimoniosActual from "./components/TestimoniosActual";
+import VentajasAmazon from "./components/VentajasAmazon";
 import InfluencerMarketingStory from "./components/InfluencerMarketingStory";
 
 interface CasinoTextProps {
@@ -753,36 +753,14 @@ export default function App() {
   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
   const [isServicesSectionOpen, setIsServicesSectionOpen] = useState(false);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [showIframe, setShowIframe] = useState(false);
-  const [isVideoReady, setIsVideoReady] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [transitionAction, setTransitionAction] = useState<(() => void) | null>(
     null,
   );
 
   const sectionRef = useRef<HTMLElement>(null);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-  const footerRef = useRef<HTMLElement>(null);
-  const [footerHeight, setFooterHeight] = useState(0);
 
-  useEffect(() => {
-    if (!footerRef.current) return;
-    const observer = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        setFooterHeight(entry.contentRect.height);
-      }
-    });
-    observer.observe(footerRef.current);
-    return () => observer.disconnect();
-  }, []);
 
-  // Timer to render video (iframe) after 1.5 seconds (dejar la imagen 1.5 segundos)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowIframe(true);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
 
   const triggerTransition = (action: () => void) => {
     setTransitionAction(() => action);
@@ -832,140 +810,6 @@ export default function App() {
     });
   };
 
-  useEffect(() => {
-    if (!showIframe || !iframeRef.current) return;
-
-    let player: any = null;
-    let isPausedAtEnd = false;
-    let fallbackInterval: any = null;
-
-    const resumePlay = () => {
-      if (player) {
-        player
-          .play()
-          .then(() => {
-            cleanupGestureListeners();
-          })
-          .catch((err: any) => {
-            console.log(
-              "Interactive Vimeo play attempt skipped or blocked:",
-              err,
-            );
-          });
-      }
-    };
-
-    const cleanupGestureListeners = () => {
-      document.removeEventListener("click", resumePlay);
-      document.removeEventListener("touchstart", resumePlay);
-      document.removeEventListener("mousemove", resumePlay);
-      document.removeEventListener("scroll", resumePlay);
-    };
-
-    const initPlayer = () => {
-      // @ts-ignore
-      if (window.Vimeo && window.Vimeo.Player && iframeRef.current) {
-        // @ts-ignore
-        player = new window.Vimeo.Player(iframeRef.current);
-
-        let hasSettled = false;
-
-        // Force volume to 0 (muting is mandatory for browsers to allow autoplay) and trigger play immediately
-        player
-          .setVolume(0)
-          .then(() => {
-            player.play().catch((err: any) => {
-              console.log(
-                "Initial autoplay blocked slightly by browser policy, fallback gesture handlers will resume it:",
-                err,
-              );
-            });
-          })
-          .catch(() => {});
-
-        // Only when the video is actively playing frames
-        player.on("playing", () => {
-          if (!hasSettled) {
-            hasSettled = true;
-            // Delay slightly after playback begins to guarantee a flawless frame transitions
-            setTimeout(() => {
-              setIsVideoReady(true);
-            }, 100);
-            cleanupGestureListeners();
-          }
-        });
-
-        // Fast state display safety fallback
-        setTimeout(() => {
-          if (!hasSettled) {
-            setIsVideoReady(true);
-          }
-        }, 1500);
-
-        player
-          .getDuration()
-          .then((duration: number) => {
-            // Pause slightly before the end to freeze exactly on the static brand logo frame (typically duration - 0.45 seconds)
-            const stopTime = Math.max(0, duration - 0.45);
-
-            player.on("timeupdate", (data: { seconds: number }) => {
-              if (data.seconds >= stopTime && !isPausedAtEnd) {
-                isPausedAtEnd = true;
-                player
-                  .pause()
-                  .then(() => {
-                    player.setCurrentTime(stopTime);
-                  })
-                  .catch(() => {});
-              }
-            });
-
-            // Prevent video from going to a black screen if it manages to reach the 'ended' state
-            player.on("ended", () => {
-              isPausedAtEnd = true;
-              player
-                .setCurrentTime(stopTime)
-                .then(() => {
-                  player.pause();
-                })
-                .catch(() => {});
-            });
-          })
-          .catch(() => {});
-      }
-    };
-
-    // Attach click, touch, mouse movement and scroll listeners to catch any micro-movements on page load
-    document.addEventListener("click", resumePlay);
-    document.addEventListener("touchstart", resumePlay);
-    document.addEventListener("mousemove", resumePlay, { passive: true });
-    document.addEventListener("scroll", resumePlay, { passive: true });
-
-    // @ts-ignore
-    if (window.Vimeo) {
-      initPlayer();
-    } else {
-      const handleScriptLoad = () => {
-        initPlayer();
-      };
-      window.addEventListener("load", handleScriptLoad);
-
-      fallbackInterval = setInterval(() => {
-        // @ts-ignore
-        if (window.Vimeo) {
-          initPlayer();
-          clearInterval(fallbackInterval);
-        }
-      }, 500);
-    }
-
-    return () => {
-      cleanupGestureListeners();
-      if (fallbackInterval) {
-        clearInterval(fallbackInterval);
-      }
-    };
-  }, [showIframe]);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -1228,304 +1072,8 @@ export default function App() {
         )}
       </AnimatePresence>
       <div 
-        className="relative z-10 min-h-screen bg-[#eaeded] flex flex-col font-sans text-[#102135] w-full max-w-full shadow-[0_20px_60px_rgba(0,0,0,0.5)]" 
-        style={{ marginBottom: footerHeight ? `${footerHeight}px` : "1px" }}
+        className="relative z-10 min-h-screen bg-[#eaeded] flex flex-col font-sans text-[#102135] w-full max-w-full"
       >
-        {/* Barra de Navegación Unificada */}
-        {isNavMenuOpen && (
-          <div
-            className="fixed inset-0 z-[90] bg-black/20 backdrop-blur-[2px]"
-            onClick={() => setIsNavMenuOpen(false)}
-          />
-        )}
-        <nav
-          id="main-navigation"
-          className="fixed top-2 sm:top-3 z-[100] w-full pointer-events-none transition-all duration-300"
-        >
-          <motion.div
-            layout
-            transition={{
-              type: "spring",
-              stiffness: 130,
-              damping: 20,
-              mass: 1,
-            }}
-            className={`mx-auto flex items-center pointer-events-auto relative transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500 ease-in-out ${
-              isOverDarkBg
-                ? isScrolled || selectedService !== null
-                  ? "w-[96%] sm:w-[92%] max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl rounded-full bg-white/95 backdrop-blur-md shadow-[0_12px_30px_rgba(16,33,53,0.12)] border border-slate-200/80 px-4 sm:px-6 h-11 sm:h-12 mt-1 sm:mt-2 justify-between"
-                  : "w-[96%] max-w-7xl xl:max-w-[1440px] rounded-[2rem] bg-white h-12 sm:h-14 px-4 sm:px-8 lg:px-12 border border-slate-200/50 shadow-[0_12px_30px_rgba(16,33,53,0.08)] mt-1 sm:mt-2 justify-between"
-                : isScrolled || selectedService !== null
-                  ? "w-[96%] sm:w-[92%] max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl rounded-full bg-[#102135]/95 backdrop-blur-md shadow-[0_12px_30px_rgba(16,33,53,0.4)] border border-white/10 px-4 sm:px-6 h-11 sm:h-12 mt-1 sm:mt-2 justify-between"
-                  : "w-[96%] max-w-7xl xl:max-w-[1440px] rounded-[2rem] bg-[#102135] h-12 sm:h-14 px-4 sm:px-8 lg:px-12 border border-white/5 shadow-[0_12px_30px_rgba(16,33,53,0.3)] mt-1 sm:mt-2 justify-between"
-            }`}
-          >
-            {/* Col 1: Logo */}
-            <div className="flex-none flex items-center justify-start shrink-0">
-            </div>
-
-            {/* Centered PPC Audit Button when Scrolled or Outside Home */}
-            {(isScrolled || selectedService !== null) && (
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-50 pointer-events-auto">
-                <motion.button
-                  layoutId="free-ppc-audit"
-                  onClick={() => {
-                    window.open(
-                      "https://calendly.com/federico-rrwv/30min",
-                      "_blank",
-                    );
-                  }}
-                  className={`px-3 py-1 sm:px-4 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-black tracking-wider uppercase transition-colors duration-300 pointer-events-auto h-7 sm:h-8 hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center min-w-max ${
-                    isOverDarkBg
-                      ? "bg-[#102135] text-white hover:bg-[#102135]/90 shadow-md"
-                      : "bg-[#f90] text-white hover:bg-[#ffb400]/90 shadow-md shadow-[#f90]/15"
-                  }`}
-                >
-                  {lang === "es" ? "Auditoría PPC Gratuita" : "Free PPC Audit"}
-                </motion.button>
-              </div>
-            )}
-
-            {/* Grupo de Botones: Hamburguesa */}
-            <motion.div
-              layout
-              transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-              className="flex-none flex items-center gap-2 sm:gap-3"
-            >
-              {/* Menu Hamburger Button */}
-              <button
-                onClick={() => setIsNavMenuOpen(!isNavMenuOpen)}
-                className={`p-1.5 sm:p-2 rounded-full cursor-pointer transition-colors duration-200 focus:outline-none flex items-center justify-center relative pointer-events-auto h-9 w-9 sm:h-10 sm:w-10 ${
-                  isOverDarkBg
-                    ? "text-slate-800 hover:bg-slate-100 hover:text-[#f90]"
-                    : "text-white hover:bg-white/10 hover:text-[#ffb400]"
-                }`}
-                title={lang === "es" ? "Menú" : "Menu"}
-              >
-                <AnimatePresence mode="wait">
-                  {isNavMenuOpen ? (
-                    <motion.div
-                      key="close"
-                      initial={{ rotate: -90, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: 90, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <X className="w-5 h-5 sm:w-6 sm:h-6" />
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="menu"
-                      initial={{ rotate: 90, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: -90, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </button>
-            </motion.div>
-          </motion.div>
-
-          {/* Absolute Dropdown Panel */}
-          <AnimatePresence>
-            {isNavMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -15, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -15, scale: 0.95 }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                className={`absolute top-[105%] left-4 right-4 sm:left-auto sm:right-[4%] mt-2 max-w-full sm:w-[325px] rounded-3xl shadow-[0_20px_50px_rgba(16,33,53,0.3)] z-[110] pointer-events-auto overflow-hidden divide-y ${
-                  isOverDarkBg
-                    ? "bg-white/95 backdrop-blur-md border border-slate-200/80 text-[#102135] divide-slate-100"
-                    : "bg-[#102135]/95 backdrop-blur-md border border-white/10 text-white divide-white/5"
-                }`}
-              >
-                {/* Opción 1: Servicios con Sub-menú */}
-                <div className="flex flex-col">
-                  <button
-                    onClick={() =>
-                      setIsServicesSectionOpen(!isServicesSectionOpen)
-                    }
-                    className={`w-full flex items-center justify-between px-6 py-4 text-xs font-black tracking-widest uppercase transition-colors text-left focus:outline-none ${
-                      isOverDarkBg
-                        ? "hover:bg-slate-50 text-slate-800"
-                        : "hover:bg-white/5 text-white"
-                    }`}
-                  >
-                    <span className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#ffb400]" />
-                      {lang === "es" ? "Servicios" : "Services"}
-                    </span>
-                    <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-300 ${isServicesSectionOpen ? "rotate-180 text-[#ffb400]" : ""}`}
-                    />
-                  </button>
-
-                  <AnimatePresence initial={false}>
-                    {isServicesSectionOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                        className={`overflow-hidden border-l-4 border-[#ffb400] ${
-                          isOverDarkBg ? "bg-slate-50/50" : "bg-white/[0.02]"
-                        }`}
-                      >
-                        <div className="py-2 px-7 flex flex-col gap-1">
-                          {[
-                            {
-                              label: "Amazon Solutions",
-                              slug: "amazon-google-meta",
-                            },
-                            {
-                              label: "Mercado Libre Ads",
-                              slug: "ecosistema-canales",
-                              tab: "ml",
-                            },
-                            {
-                              label: "Google & Meta Ads",
-                              slug: "ecosistema-canales",
-                              tab: "google",
-                            },
-                            {
-                              label: "TikTok Shops",
-                              slug: "ecosistema-canales",
-                              tab: "tiktok",
-                            },
-                            {
-                              label: "Influencer Marketing",
-                              slug: "ecosistema-canales",
-                              tab: "meta",
-                            },
-                          ].map((elem, idx) => (
-                            <a
-                              key={idx}
-                              href={`?service=${elem.slug}${elem.tab ? `&tab=${elem.tab}` : ""}&lang=${lang}`}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                setIsNavMenuOpen(false);
-                                triggerTransition(() => {
-                                  const url = new window.URL(
-                                    window.location.href,
-                                  );
-                                  url.searchParams.set("service", elem.slug);
-                                  if (elem.tab)
-                                    url.searchParams.set("tab", elem.tab);
-                                  else url.searchParams.delete("tab");
-                                  url.searchParams.set("lang", lang);
-                                  window.history.pushState(
-                                    {},
-                                    "",
-                                    url.toString(),
-                                  );
-                                  window.dispatchEvent(new Event("popstate"));
-                                  setSelectedService(elem.slug);
-                                });
-                              }}
-                              className={`block py-2 text-xs font-bold transition-all transition-transform duration-200 hover:translate-x-1 ${
-                                isOverDarkBg
-                                  ? "text-slate-600 hover:text-[#f90]"
-                                  : "text-white/70 hover:text-[#ffb400]"
-                              }`}
-                            >
-                              {elem.label}
-                            </a>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Opción 2: Casos de éxito */}
-                <button
-                  onClick={() => {
-                    setIsNavMenuOpen(false);
-                    triggerTransition(() => {
-                      const url = new window.URL(window.location.href);
-                      url.searchParams.set("service", "casos-de-exito");
-                      window.history.pushState({}, "", url.toString());
-                      setSelectedService("casos-de-exito");
-                    });
-                  }}
-                  className={`w-full text-left px-6 py-4 text-xs font-black tracking-widest uppercase transition-colors focus:outline-none flex items-center gap-2 ${
-                    isOverDarkBg
-                      ? "hover:bg-slate-50 text-slate-800"
-                      : "hover:bg-white/5 text-white"
-                  }`}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#ffb400]" />
-                  {lang === "es" ? "Casos de Éxito" : "Success Stories"}
-                </button>
-
-                {/* Opción 3: FAQ */}
-                <button
-                  onClick={() => {
-                    setIsNavMenuOpen(false);
-                    triggerTransition(() => {
-                      const url = new window.URL(window.location.href);
-                      url.searchParams.set("service", "faq");
-                      window.history.pushState({}, "", url.toString());
-                      setSelectedService("faq");
-                    });
-                  }}
-                  className={`w-full text-left px-6 py-4 text-xs font-black tracking-widest uppercase transition-colors focus:outline-none flex items-center gap-2 ${
-                    isOverDarkBg
-                      ? "hover:bg-slate-50 text-slate-800"
-                      : "hover:bg-white/5 text-white"
-                  }`}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#ffb400]" />
-                  FAQ
-                </button>
-
-                {/* Opción 4: About Us */}
-                <button
-                  onClick={() => {
-                    setIsNavMenuOpen(false);
-                    triggerTransition(() => {
-                      const url = new window.URL(window.location.href);
-                      url.searchParams.set("service", "about-us");
-                      window.history.pushState({}, "", url.toString());
-                      setSelectedService("about-us");
-                    });
-                  }}
-                  className={`w-full text-left px-6 py-4 text-xs font-black tracking-widest uppercase transition-colors focus:outline-none flex items-center gap-2 ${
-                    isOverDarkBg
-                      ? "hover:bg-slate-50 text-slate-800"
-                      : "hover:bg-white/5 text-white"
-                  }`}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#ffb400]" />
-                  {lang === "es" ? "Sobre Nosotros" : "About Us"}
-                </button>
-
-                {/* Opción 4: Contacto */}
-                <button
-                  onClick={() => {
-                    setIsNavMenuOpen(false);
-                    window.open("https://wa.me/5491165088135", "_blank");
-                  }}
-                  className={`w-full text-left px-6 py-4 text-xs font-black tracking-widest uppercase transition-colors focus:outline-none flex items-center justify-between text-[#ffb400] ${
-                    isOverDarkBg ? "hover:bg-slate-50" : "hover:bg-white/5"
-                  }`}
-                >
-                  <span className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#ffb400]" />
-                    {lang === "es" ? "Contacto" : "Contact"}
-                  </span>
-                  <span className="text-[10px] bg-[#ffb400]/20 text-[#ffb400] font-extrabold px-2 py-0.5 rounded-full tracking-normal capitalize font-sans">
-                    {lang === "es" ? "Ahora" : "Now"}
-                  </span>
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </nav>
 
         {/* Floating Actions */}
         <div className="fixed bottom-[15px] lg:bottom-[27px] right-5 lg:right-8 z-[100] flex items-center justify-end pointer-events-none gap-3">
@@ -1625,7 +1173,7 @@ export default function App() {
                 {/* Sección Hero */}
                 <motion.section
                   ref={sectionRef}
-                  className="relative px-4 pb-0 pt-16 sm:pt-20 lg:pt-[80px] xl:pt-[96px] lg:pb-12 z-10 w-full h-full overflow-y-auto lg:overflow-visible flex items-start lg:items-center"
+                  className="relative px-4 pb-0 pt-6 sm:pt-8 lg:pt-10 xl:pt-12 lg:pb-12 z-10 w-full h-full overflow-y-auto lg:overflow-visible flex items-start lg:items-center"
                 >
                   {/* Fondo decorativo sutil */}
                   <div className="fixed top-0 right-0 w-[600px] h-[600px] bg-[#007185] rounded-[100%] blur-[150px] -z-10 opacity-[0.05] pointer-events-none" />
@@ -1636,15 +1184,8 @@ export default function App() {
                     <div className="w-full lg:w-[48%] xl:w-[50%] lg:sticky lg:top-[130px] xl:top-[148px] lg:h-max flex flex-col justify-center items-center text-center gap-2 sm:gap-3 z-20 bg-transparent px-4 pt-1 pb-0 lg:pb-8 xl:pb-12 mt-0 transition-all duration-300">
                       {/* Contenedor de Imagen y Video (Mismo Tamaño, Ocupan el Mismo Lugar) */}
                       <div className="w-full max-w-[480px] xs:max-w-[565px] sm:max-w-[680px] lg:max-w-[780px] xl:max-w-[920px] select-none relative flex items-center justify-center shrink-0 z-20 aspect-[16/9.6] sm:aspect-[1.62/1]">
-                        {/* Imagen (Fase Inicial / 2 primeros segundos) */}
-                        <motion.div
-                          animate={{
-                            opacity: showIframe ? 0 : 1,
-                            scale: showIframe ? 0.95 : 1,
-                          }}
-                          transition={{ duration: 0.6, ease: "easeInOut" }}
-                          className="w-full h-full select-none relative z-20 flex items-center justify-center"
-                        >
+                        {/* Imagen de la carátula */}
+                          <div className="w-full h-full select-none relative z-20 flex items-center justify-center">
                           <img
                             src="https://res.cloudinary.com/dzrqhomvz/image/upload/v1779291160/fmhpubtcndg84fvbqago.png"
                             alt="Premium Team & Agency"
@@ -1653,42 +1194,8 @@ export default function App() {
                             loading="eager"
                             fetchPriority="high"
                           />
-                        </motion.div>
+                          </div>
 
-                        {/* Video (Aparece a los 2 segundos en el exacto mismo lugar con el exacto mismo tamaño) */}
-                        <AnimatePresence>
-                          {showIframe && (
-                            <motion.div
-                              initial={{ opacity: 0, scale: 0.95 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              exit={{ opacity: 0, scale: 0.95 }}
-                              transition={{ duration: 0.6, ease: "easeInOut" }}
-                              className="absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden z-10 flex items-center justify-center"
-                              style={{
-                                maskImage:
-                                  "radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 80%)",
-                                WebkitMaskImage:
-                                  "radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 80%)",
-                              }}
-                            >
-                              <iframe
-                                ref={iframeRef}
-                                src="https://player.vimeo.com/video/1194020653?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&muted=1&loop=0&controls=0&title=0&byline=0&portrait=0&playsinline=1&background=1"
-                                frameBorder="0"
-                                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-                                referrerPolicy="strict-origin-when-cross-origin"
-                                className="w-full h-full"
-                                style={{
-                                  width: "100%",
-                                  height: "100%",
-                                  filter: "contrast(1.05) brightness(1.02)",
-                                }}
-                                title="gemini_generated_video_1A63899E"
-                                loading="eager"
-                              ></iframe>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
                       </div>
                       {/* Free PPC Audit Neumorphic Button */}
                       <div className="mt-5 sm:mt-6 flex justify-center z-30 relative select-none h-12 sm:h-14">
@@ -2551,242 +2058,23 @@ export default function App() {
                   </div>
                 </section>
               </div>
+
+              {/* Domina tus Ventas en Amazon (el mismo componente de Amazon Solutions) */}
+              <section className="w-full bg-[#eaeded] relative z-40 pt-12 overflow-hidden">
+                <VentajasAmazon
+                  serviceSlug="amazon-solutions"
+                  lang={lang}
+                  onContactClick={() => {
+                    window.open("https://wa.me/5491165088135", "_blank");
+                  }}
+                />
+              </section>
             </main>
           </>
         )}
 
-        {/* Testimonios Section */}
-        {selectedService === null && <TestimoniosActual lang={lang} />}
-
-        {/* Global Contact Section - Horizontal layout (Apaisado)  - Styled with brand blue box and white form */}
-        <section
-          id="contacto"
-          className="w-full py-16 px-4 md:px-8 shrink-0 relative bg-white z-40 shadow-[0_10px_40px_rgba(0,0,0,0.3)]"
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="w-full max-w-7xl mx-auto bg-[#102135] rounded-[2rem] md:rounded-[2.5rem] p-6 lg:p-10 border border-white/10 shadow-[0_20px_50px_rgba(16,33,53,0.25)] relative overflow-hidden"
-          >
-            {/* Subtle bg decorations */}
-            <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[150%] bg-[#f90]/5 blur-[100px] pointer-events-none" />
-            <div className="absolute top-[20%] -right-[10%] w-[50%] h-[150%] bg-[#007185]/10 blur-[100px] pointer-events-none" />
-
-            <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center relative z-10">
-              {/* Left Column: Text */}
-              <div className="w-full lg:w-[35%] xl:w-[30%] text-center lg:text-left shrink-0">
-                <span className="inline-block py-1 px-3 rounded-full bg-[#f90]/15 border border-[#f90]/30 text-[#f90] text-[10px] sm:text-xs font-black tracking-widest uppercase mb-3">
-                  {lang === "es" ? "Hablemos" : "Let's Talk"}
-                </span>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white hover:text-[#f90] transition-colors duration-300 mb-3 tracking-tight leading-tight">
-                  {currentTranslation.contactTitle}
-                </h2>
-                <p className="text-xs sm:text-sm text-blue-100/80 font-bold leading-relaxed max-w-md mx-auto lg:mx-0">
-                  {currentTranslation.contactSubtitle}
-                </p>
-              </div>
-
-              {/* Right Column: Form (Horizontal Layout) */}
-              <div className="w-full lg:w-[65%] xl:w-[70%] bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-[0_30px_60px_rgba(0,0,0,0.25)] border border-slate-100">
-                <form className="flex flex-col gap-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="flex flex-col group">
-                      <input
-                        type="text"
-                        id="nombre"
-                        className="bg-[#f3f6f8] shadow-[inset_4px_4px_8px_#d9e0e6,inset_-4px_-4px_8px_#ffffff] rounded-xl px-5 py-4 text-[#102135] outline-none transition-all placeholder:text-[#102135]/40 font-bold text-sm focus:shadow-[inset_6px_6px_12px_#d9e0e6,inset_-6px_-6px_12px_#ffffff] focus:ring-2 focus:ring-[#f90]/50 border border-transparent"
-                        placeholder={currentTranslation.placeholderName}
-                      />
-                    </div>
-                    <div className="flex flex-col group">
-                      <input
-                        type="text"
-                        id="empresa"
-                        className="bg-[#f3f6f8] shadow-[inset_4px_4px_8px_#d9e0e6,inset_-4px_-4px_8px_#ffffff] rounded-xl px-5 py-4 text-[#102135] outline-none transition-all placeholder:text-[#102135]/40 font-bold text-sm focus:shadow-[inset_6px_6px_12px_#d9e0e6,inset_-6px_-6px_12px_#ffffff] focus:ring-2 focus:ring-[#f90]/50 border border-transparent"
-                        placeholder={currentTranslation.placeholderCompany}
-                      />
-                    </div>
-                    <div className="flex flex-col group sm:col-span-2">
-                      <input
-                        type="email"
-                        id="email"
-                        className="bg-[#f3f6f8] shadow-[inset_4px_4px_8px_#d9e0e6,inset_-4px_-4px_8px_#ffffff] rounded-xl px-5 py-4 text-[#102135] outline-none transition-all placeholder:text-[#102135]/40 font-bold text-sm focus:shadow-[inset_6px_6px_12px_#d9e0e6,inset_-6px_-6px_12px_#ffffff] focus:ring-2 focus:ring-[#f90]/50 border border-transparent"
-                        placeholder={currentTranslation.placeholderEmail}
-                      />
-                    </div>
-                    <div className="flex flex-col group sm:col-span-2">
-                      <textarea
-                        id="mensaje"
-                        rows={2}
-                        className="bg-[#f3f6f8] shadow-[inset_4px_4px_8px_#d9e0e6,inset_-4px_-4px_8px_#ffffff] rounded-xl px-5 py-4 text-[#102135] outline-none resize-none transition-all placeholder:text-[#102135]/40 font-bold text-sm focus:shadow-[inset_6px_6px_12px_#d9e0e6,inset_-6px_-6px_12px_#ffffff] focus:ring-2 focus:ring-[#f90]/50 border border-transparent"
-                        placeholder={currentTranslation.placeholderMessage}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mt-2">
-                    <button
-                      type="button"
-                      className="w-full flex items-center justify-center gap-3 bg-[#f90] text-[#102135] hover:bg-[#ffc233] font-black text-sm tracking-widest uppercase rounded-xl px-8 py-4 transition-all duration-300 group cursor-pointer shadow-[6px_6px_12px_#d9e0e6,-6px_-6px_12px_#ffffff] hover:-translate-y-2 hover:shadow-[0_12px_25px_rgba(255,153,0,0.4)] active:translate-y-0 active:shadow-inner"
-                    >
-                      <span>{currentTranslation.btnSend}</span>
-                      <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </motion.div>
-        </section>
-
-        {/* Modern Multi-Column Footer will be rendered outside the main wrapper for the curtain effect */}
       </div>
 
-      {/* Fixed Footer Content behind the main wrapper */}
-      <footer ref={footerRef} className="fixed bottom-0 left-0 w-full text-white py-12 lg:py-16 border-t-[3px] border-[#f90] bg-[#0b1626] z-0 flex flex-col justify-end">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-14 border-b border-white/10 pb-10">
-              {/* Column 1: Brand / Description */}
-              <div className="space-y-4">
-                <p className="text-white/70 text-xs sm:text-sm leading-relaxed max-w-sm font-medium">
-                  We understand the ever-growing threat landscape of the digital
-                  world.
-                </p>
-                <div className="flex gap-3 pt-1">
-                  <a
-                    href="#"
-                    className="p-2 bg-white/5 hover:bg-[#f90] rounded-xl transition-all duration-200 text-white/50 hover:text-[#102135]"
-                    title="Youtube"
-                  >
-                    <Youtube className="w-4 h-4" />
-                  </a>
-                  <a
-                    href="#"
-                    className="p-2 bg-white/5 hover:bg-[#f90] rounded-xl transition-all duration-200 text-white/50 hover:text-[#102135]"
-                    title="Twitter"
-                  >
-                    <Twitter className="w-4 h-4" />
-                  </a>
-                  <a
-                    href="#"
-                    className="p-2 bg-white/5 hover:bg-[#f90] rounded-xl transition-all duration-200 text-white/50 hover:text-[#102135]"
-                    title="Linkedin"
-                  >
-                    <Linkedin className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
-
-              {/* Column 2: Contact Info */}
-              <div className="space-y-4">
-                <h3 className="text-[#f90] text-xs font-extrabold uppercase tracking-widest">
-                  Contact
-                </h3>
-                <ul className="space-y-3 text-xs sm:text-sm font-semibold text-white/70">
-                  <li className="flex items-center gap-2.5">
-                    <span className="p-1.5 bg-white/5 rounded-lg border border-white/5 shrink-0">
-                      <Phone className="w-3.5 h-3.5 text-[#f90]" />
-                    </span>
-                    <a
-                      href="tel:+1159194932"
-                      className="hover:text-[#f90] transition-colors font-bold"
-                    >
-                      +11 59 19 49 32
-                    </a>
-                  </li>
-                  <li className="flex items-start gap-2.5">
-                    <span className="p-1.5 bg-white/5 rounded-lg border border-white/5 shrink-0 mt-0.5">
-                      <MapPin className="w-3.5 h-3.5 text-[#f90]" />
-                    </span>
-                    <span className="font-semibold text-white/80">
-                      Av Libertador 1838
-                    </span>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Column 3: Quick Links */}
-              <div className="space-y-4">
-                <h3 className="text-[#f90] text-xs font-extrabold uppercase tracking-widest">
-                  Quick link
-                </h3>
-                <ul className="space-y-3 text-xs sm:text-sm font-semibold text-white/70">
-                  <li>
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (selectedService) handleGoBack();
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}
-                      className="hover:text-[#f90] transition-colors"
-                    >
-                      Home
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="?service=contacto"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        window.open("https://wa.me/5491165088135", "_blank");
-                      }}
-                      className="hover:text-[#f90] transition-colors"
-                    >
-                      Contact
-                    </a>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        triggerTransition(() => {
-                          const url = new window.URL(window.location.href);
-                          url.searchParams.set("service", "about-us");
-                          window.history.pushState({}, "", url.toString());
-                          setSelectedService("about-us");
-                        });
-                      }}
-                      className="hover:text-[#f90] transition-colors font-semibold text-left focus:outline-none cursor-pointer"
-                    >
-                      {lang === "es" ? "Sobre Nosotros" : "About Us"}
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        triggerTransition(() => {
-                          const url = new window.URL(window.location.href);
-                          url.searchParams.set("service", "faq");
-                          window.history.pushState({}, "", url.toString());
-                          setSelectedService("faq");
-                        });
-                      }}
-                      className="hover:text-[#f90] transition-colors font-semibold text-left focus:outline-none cursor-pointer"
-                    >
-                      FAQ
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-white/40 mt-8 font-semibold">
-              <p>
-                &copy; {new Date().getFullYear()} All rights reserved.
-              </p>
-              <div className="flex gap-4">
-                <a href="#" className="hover:text-white transition-colors">
-                  Privacy Policy
-                </a>
-                <a href="#" className="hover:text-white transition-colors">
-                  Terms of Service
-                </a>
-              </div>
-            </div>
-          </div>
-      </footer>
     </>
   );
 }

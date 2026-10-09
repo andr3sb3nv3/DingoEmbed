@@ -5,9 +5,8 @@ import ServiceDetailPage from "./components/ServiceDetailPage";
 import ContactPage from "./components/ContactPage";
 import SuccessStoriesPage from "./components/SuccessStoriesPage";
 import FAQPage from "./components/FAQPage";
-import Testimonios from "./components/Testimonios";
+import VentajasAmazon from "./components/VentajasAmazon";
 import NeumorphicContactForm from "./components/NeumorphicContactForm";
-import PreviousContactForm from "./components/PreviousContactForm";
 import { optimizeCloudinaryUrl } from "./utils";
 
 interface CasinoTextProps {
@@ -714,9 +713,6 @@ export default function App() {
   const [activeStep, setActiveStep] = useState(0);
   const [isServicesHovered, setIsServicesHovered] = useState(false);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [showIframe, setShowIframe] = useState(true);
-  const [isVideoReady, setIsVideoReady] = useState(false);
-  const [isHeroImageVisible, setIsHeroImageVisible] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [transitionAction, setTransitionAction] = useState<(() => void) | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -731,18 +727,8 @@ export default function App() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    if (selectedService === null) {
-      setIsHeroImageVisible(true);
-      const timer = setTimeout(() => {
-        setIsHeroImageVisible(false);
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [selectedService]);
 
   const sectionRef = useRef<HTMLElement>(null);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const triggerTransition = (action: () => void) => {
     setMobileMenuOpen(false);
@@ -793,139 +779,7 @@ export default function App() {
     });
   };
 
-  useEffect(() => {
-    if (!showIframe || !iframeRef.current) return;
-    
-    let player: any = null;
-    let isPausedAtEnd = false;
-    let fallbackInterval: any = null;
 
-    const resumePlay = () => {
-      if (player) {
-        player.play().then(() => {
-          cleanupGestureListeners();
-        }).catch((err: any) => {
-          console.log("Interactive Vimeo play attempt skipped or blocked:", err);
-        });
-      }
-    };
-
-    const cleanupGestureListeners = () => {
-      document.removeEventListener('click', resumePlay);
-      document.removeEventListener('touchstart', resumePlay);
-      document.removeEventListener('mousemove', resumePlay);
-      document.removeEventListener('scroll', resumePlay);
-    };
-    
-    const initPlayer = () => {
-      try {
-        // @ts-ignore
-        if (window.Vimeo && window.Vimeo.Player && iframeRef.current) {
-          // @ts-ignore
-          player = new window.Vimeo.Player(iframeRef.current);
-          
-          let hasSettled = false;
-
-          // Force volume to 0 (muting is mandatory for browsers to allow autoplay) and trigger play immediately
-          player.setVolume(0).then(() => {
-            player.play().catch((err: any) => {
-              console.log("Initial autoplay blocked slightly by browser policy, fallback gesture handlers will resume it:", err);
-            });
-          }).catch(() => {});
-
-          // Only when the video is actively playing frames
-          player.on('playing', () => {
-            if (!hasSettled) {
-              hasSettled = true;
-              // Delay slightly after playback begins to guarantee a flawless frame transitions
-              setTimeout(() => {
-                setIsVideoReady(true);
-              }, 100);
-              cleanupGestureListeners();
-            }
-          });
-
-          // Fast state display safety fallback
-          setTimeout(() => {
-            if (!hasSettled) {
-              setIsVideoReady(true);
-            }
-          }, 1500);
-
-          player.getDuration().then((duration: number) => {
-            // Pause slightly before the end to freeze exactly on the static brand logo frame (typically duration - 0.45 seconds)
-            const stopTime = Math.max(0, duration - 0.45);
-            
-            player.on('timeupdate', (data: { seconds: number }) => {
-              if (data.seconds >= stopTime && !isPausedAtEnd) {
-                isPausedAtEnd = true;
-                player.pause().then(() => {
-                  player.setCurrentTime(stopTime);
-                }).catch(() => {});
-              }
-            });
-
-            // Prevent video from going to a black screen if it manages to reach the 'ended' state
-            player.on('ended', () => {
-              isPausedAtEnd = true;
-              player.setCurrentTime(stopTime).then(() => {
-                player.pause();
-              }).catch(() => {});
-            });
-          }).catch(() => {});
-        }
-      } catch (err) {
-        console.warn("Error initializing Vimeo player:", err);
-        setIsVideoReady(true);
-      }
-    };
-
-    // Attach click, touch, mouse movement and scroll listeners to catch any micro-movements on page load
-    document.addEventListener('click', resumePlay);
-    document.addEventListener('touchstart', resumePlay);
-    document.addEventListener('mousemove', resumePlay, { passive: true });
-    document.addEventListener('scroll', resumePlay, { passive: true });
-
-    // @ts-ignore
-    if (window.Vimeo && window.Vimeo.Player) {
-      initPlayer();
-    } else {
-      const handleScriptLoad = () => {
-        initPlayer();
-      };
-      window.addEventListener('load', handleScriptLoad);
-      
-      fallbackInterval = setInterval(() => {
-        // @ts-ignore
-        if (window.Vimeo && window.Vimeo.Player) {
-          initPlayer();
-          clearInterval(fallbackInterval);
-        }
-      }, 500);
-    }
-
-    return () => {
-      cleanupGestureListeners();
-      if (fallbackInterval) {
-        clearInterval(fallbackInterval);
-      }
-    };
-  }, [showIframe]);
-
-  const [footerHeight, setFooterHeight] = useState(0);
-  const footerRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    if (footerRef.current) {
-      const observer = new ResizeObserver((entries) => {
-        if (entries[0]) {
-          setFooterHeight(entries[0].target.getBoundingClientRect().height);
-        }
-      });
-      observer.observe(footerRef.current);
-      return () => observer.disconnect();
-    }
-  }, []);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -1154,380 +1008,7 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="min-h-screen bg-[#eaeded] flex flex-col font-sans text-[#102135] overflow-x-clip relative z-10 shadow-[0_10px_50px_rgba(0,0,0,0.5)]" style={{ marginBottom: footerHeight }}>
-      {/* Barra de Navegación Unificada */}
-      <nav id="main-navigation" className="fixed top-2 sm:top-3 z-[100] w-full pointer-events-none transition-all duration-300">
-        <motion.div 
-          layout
-          transition={{ 
-            type: "spring", 
-            stiffness: 80, 
-            damping: 25,
-            mass: 1.1
-          }}
-          className={`mx-auto flex flex-col justify-center pointer-events-auto transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500 ease-in-out ${
-            isOverDarkBg
-              ? isScrolled 
-                ? `w-[92%] sm:w-[90%] max-w-md md:max-w-3xl lg:max-w-4xl bg-white/95 backdrop-blur-md shadow-[0_12px_30px_rgba(16,33,53,0.12)] border border-slate-200/80 px-5 sm:px-6 mt-1 sm:mt-2 ${mobileMenuOpen ? 'rounded-3xl py-4 h-auto' : 'rounded-full h-11 sm:h-12 py-0'}` 
-                : `w-[96%] max-w-7xl bg-white px-6 sm:px-8 lg:px-12 border border-slate-200/50 shadow-[0_12px_30px_rgba(16,33,53,0.08)] mt-1 sm:mt-1.5 ${mobileMenuOpen ? 'rounded-3xl py-5 h-auto' : 'rounded-[2rem] h-12 sm:h-14 py-0'}`
-              : isScrolled 
-                ? `w-[92%] sm:w-[90%] max-w-md md:max-w-3xl lg:max-w-4xl bg-[#102135]/95 backdrop-blur-md shadow-[0_12px_30px_rgba(16,33,53,0.4)] border border-white/10 px-5 sm:px-6 mt-1 sm:mt-2 ${mobileMenuOpen ? 'rounded-3xl py-4 h-auto' : 'rounded-full h-11 sm:h-12 py-0'}` 
-                : `w-[96%] max-w-7xl bg-[#102135] px-6 sm:px-8 lg:px-12 border border-white/5 shadow-[0_12px_30px_rgba(16,33,53,0.3)] mt-1 sm:mt-1.5 ${mobileMenuOpen ? 'rounded-3xl py-5 h-auto' : 'rounded-[2rem] h-12 sm:h-14 py-0'}`
-          }`}
-        >
-          {/* Main Navigation Row */}
-          <div className="w-full flex items-center justify-between">
-            
-            {/* Left: Brand Logo */}
-            <div className="flex items-center shrink-0">
-            </div>
-
-            {/* Right: Navigation Items */}
-            {/* Desktop-only Links (visible on screen md: >= 768px) */}
-            <div className="hidden md:flex items-center gap-6 sm:gap-7 md:gap-8">
-              {!isMobile && (isScrolled || selectedService !== null) && (
-                <motion.button 
-                  layoutId="audit-btn"
-                  style={{ borderRadius: 9999, zIndex: 100 }}
-                  transition={{ type: "spring", stiffness: 80, damping: 25, mass: 1.1 }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.open("https://calendly.com/federico-rrwv/30min", "_blank");
-                  }}
-                  className="px-4 sm:px-5 py-1.5 sm:py-2 bg-[#ffb400] shadow-[0_4px_10px_rgba(255,180,0,0.3)] transition-colors flex items-center justify-center gap-1.5 text-[#102135] group cursor-pointer focus:outline-none pointer-events-auto shrink-0 rounded-full"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <motion.span layoutId="audit-btn-text" transition={{ type: "spring", stiffness: 80, damping: 25, mass: 1.1 }} className="font-extrabold text-[10px] sm:text-xs tracking-wide uppercase text-[#102135] whitespace-nowrap">
-                    {currentTranslation.auditButton}
-                  </motion.span>
-                  <motion.div 
-                    layoutId="audit-btn-icon"
-                    className="overflow-hidden flex items-center justify-center shrink-0"
-                    initial={{ opacity: 0, width: 0, scale: 0 }}
-                    animate={{ opacity: 1, width: "auto", scale: 1 }}
-                    transition={{ type: "spring", stiffness: 80, damping: 25, mass: 1.1 }}
-                  >
-                    <TrendingUp className="w-3.5 h-3.5 text-[#102135] ml-1" />
-                  </motion.div>
-                </motion.button>
-              )}
-              
-              <CasinoText 
-                text={currentTranslation.navCaseStudies}
-                href="?service=casos-exito"
-                onClick={(e) => {
-                  e.preventDefault();
-                  triggerTransition(() => {
-                    const url = new window.URL(window.location.href);
-                    url.searchParams.set('service', 'casos-exito');
-                    window.history.pushState({}, '', url.toString());
-                    setSelectedService('casos-exito');
-                  });
-                }}
-                className={`inline-flex items-center font-extrabold transition-colors duration-200 shrink-0 ${
-                  isOverDarkBg 
-                    ? 'text-slate-800 hover:text-[#f90]' 
-                    : 'text-white hover:text-[#ffb400]'
-                } ${isScrolled ? 'text-xs sm:text-sm' : 'text-sm sm:text-[15px] md:text-base'}`}
-              />
-
-              {/* Dropdown de Servicios */}
-              <div 
-                className="relative py-1.5 shrink-0"
-                onMouseEnter={() => setIsServicesHovered(true)}
-                onMouseLeave={() => setIsServicesHovered(false)}
-              >
-                <button 
-                  type="button"
-                  className={`inline-flex items-center gap-1 font-extrabold transition-colors duration-200 cursor-pointer focus:outline-none whitespace-nowrap shrink-0 ${
-                    isOverDarkBg 
-                      ? 'text-slate-800 hover:text-[#f90]' 
-                      : 'text-white hover:text-[#ffb400]'
-                  } ${isScrolled ? 'text-xs sm:text-sm' : 'text-sm sm:text-[15px] md:text-base'}`}
-                >
-                  <CasinoText text={currentTranslation.navServices} />
-                  <svg className={`w-3 h-3 transition-transform duration-200 shrink-0 ${isOverDarkBg ? 'text-slate-800/80' : 'text-white/80'} ${isServicesHovered ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                
-                {/* Dropdown Menu Panel with transparent bridge gap */}
-                <div 
-                  className={`absolute left-1/2 -translate-x-1/2 top-[100%] w-52 sm:w-56 pt-5 transition-all duration-200 z-50 pointer-events-auto ${
-                    isServicesHovered 
-                    ? 'opacity-100 visible' 
-                    : 'opacity-0 invisible pointer-events-none'
-                  }`}
-                >
-                  <div className={`rounded-2xl border p-2 text-left transform origin-top transition-transform duration-200 ${
-                    isOverDarkBg
-                      ? 'bg-white border-slate-200 shadow-[0_12px_45px_rgba(16,33,53,0.12)]'
-                      : 'bg-[#102135] border-white/10 shadow-[0_12px_45px_rgba(0,0,0,0.65)]'
-                  }`}>
-                    {[
-                      { label: "Amazon Solutions", slug: "amazon-google-meta" },
-                      { label: "Mercado Libre Ads", slug: "mercado-libre-ads" },
-                      { label: "Google & Meta Ads", slug: "amazon-google-meta" },
-                      { label: "Tiktok Shops", slug: "tiktok-shops" },
-                      { label: "Influencer Marketing", slug: "influencer-marketing" }
-                    ].map((item, idx) => (
-                      <a
-                        key={idx}
-                        href={`?service=${item.slug}&lang=${lang}`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setIsServicesHovered(false);
-                          triggerTransition(() => {
-                             window.history.pushState({}, '', `?service=${item.slug}&lang=${lang}`);
-                             window.dispatchEvent(new Event('popstate'));
-                          });
-                        }}
-                        className={`block w-full text-left px-4 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-colors duration-150 ${
-                          isOverDarkBg
-                            ? 'text-slate-700 hover:bg-slate-50 hover:text-[#f90]'
-                            : 'text-white hover:bg-[#f90]/15 hover:text-[#ffb400]'
-                        }`}
-                      >
-                        {item.label}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <CasinoText 
-                text={currentTranslation.navAbout}
-                href="?service=about"
-                onClick={(e) => {
-                  e.preventDefault();
-                  triggerTransition(() => {
-                    const url = new window.URL(window.location.href);
-                    url.searchParams.set('service', 'about');
-                    window.history.pushState({}, '', url.toString());
-                    setSelectedService('about');
-                  });
-                }}
-                className={`inline-flex items-center font-extrabold transition-colors duration-200 shrink-0 cursor-pointer ${
-                  isOverDarkBg 
-                    ? 'text-slate-800 hover:text-[#f90]' 
-                    : 'text-white hover:text-[#ffb400]'
-                } ${isScrolled ? 'text-xs sm:text-sm' : 'text-sm sm:text-[15px] md:text-base'}`}
-              />
-
-              <CasinoText 
-                text={currentTranslation.navFaq}
-                href="?service=faq"
-                onClick={(e) => {
-                  e.preventDefault();
-                  triggerTransition(() => {
-                    const url = new window.URL(window.location.href);
-                    url.searchParams.set('service', 'faq');
-                    window.history.pushState({}, '', url.toString());
-                    setSelectedService('faq');
-                  });
-                }}
-                className={`inline-flex items-center font-extrabold transition-colors duration-200 shrink-0 cursor-pointer ${
-                  isOverDarkBg 
-                    ? 'text-slate-800 hover:text-[#f90]' 
-                    : 'text-white hover:text-[#ffb400]'
-                } ${isScrolled ? 'text-xs sm:text-sm' : 'text-sm sm:text-[15px] md:text-base'}`}
-              />
-
-              <CasinoText 
-                text={currentTranslation.navContact}
-                href="https://wa.me/5491165088135"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.open("https://wa.me/5491165088135", "_blank");
-                }}
-                className={`inline-flex items-center font-extrabold transition-colors duration-200 shrink-0 cursor-pointer ${
-                  isOverDarkBg 
-                    ? 'text-slate-800 hover:text-[#f90]' 
-                    : 'text-white hover:text-[#ffb400]'
-                } ${isScrolled ? 'text-xs sm:text-sm' : 'text-sm sm:text-[15px] md:text-base'}`}
-              />
-            </div>
-
-            {/* Mobile-only Hamburger Toggle Trigger (visible on screen md: < 768px) */}
-            <div className="md:hidden flex items-center gap-2.5 shrink-0">
-              {isMobile && (isScrolled || selectedService !== null) && (
-                <motion.button 
-                  layoutId="audit-btn"
-                  style={{ borderRadius: 9999, zIndex: 100 }}
-                  transition={{ type: "spring", stiffness: 80, damping: 25, mass: 1.1 }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.open("https://calendly.com/federico-rrwv/30min", "_blank");
-                  }}
-                  className="px-3.5 py-1.5 bg-[#ffb400] shadow-[0_4px_10px_rgba(255,180,0,0.3)] transition-colors flex items-center justify-center gap-1 text-[#102135] group cursor-pointer focus:outline-none pointer-events-auto shrink-0 rounded-full"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <motion.span layoutId="audit-btn-text" transition={{ type: "spring", stiffness: 80, damping: 25, mass: 1.1 }} className="font-extrabold text-[10px] tracking-wide uppercase text-[#102135] whitespace-nowrap">
-                    {currentTranslation.auditButton}
-                  </motion.span>
-                  <motion.div 
-                    layoutId="audit-btn-icon"
-                    className="overflow-hidden flex items-center justify-center shrink-0"
-                    initial={{ opacity: 0, width: 0, scale: 0 }}
-                    animate={{ opacity: 1, width: "auto", scale: 1 }}
-                    transition={{ type: "spring", stiffness: 80, damping: 25, mass: 1.1 }}
-                  >
-                    <TrendingUp className="w-3.5 h-3.5 text-[#102135] ml-1" />
-                  </motion.div>
-                </motion.button>
-              )}
-              
-              <button
-                type="button"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className={`p-2 rounded-xl transition-colors shrink-0 pointer-events-auto focus:outline-none cursor-pointer ${
-                  isOverDarkBg 
-                    ? 'text-slate-800 hover:bg-slate-100' 
-                    : 'text-white hover:bg-white/10'
-                }`}
-              >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-            </div>
-
-          </div>
-
-          {/* Interactive Mobile Slide-down Panel (handles all overflow, alignment & fits "Contacto" instantly inside) */}
-          <AnimatePresence>
-            {mobileMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                animate={{ opacity: 1, height: "auto", marginTop: 16 }}
-                exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                transition={{ duration: 0.25, ease: "easeInOut" }}
-                className="w-full border-t border-slate-200/15 overflow-hidden flex flex-col gap-5 text-left md:hidden"
-              >
-                <div className="flex flex-col gap-4 pt-4 pb-2">
-                  {/* Case studies */}
-                  <a
-                    href="?service=casos-exito"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      triggerTransition(() => {
-                        const url = new window.URL(window.location.href);
-                        url.searchParams.set('service', 'casos-exito');
-                        window.history.pushState({}, '', url.toString());
-                        setSelectedService('casos-exito');
-                      });
-                    }}
-                    className={`text-sm tracking-wide font-black transition-colors ${
-                      isOverDarkBg ? 'text-slate-700 hover:text-[#f90]' : 'text-slate-100 hover:text-[#ffb400]'
-                    }`}
-                  >
-                    {currentTranslation.navCaseStudies}
-                  </a>
-
-                  {/* Mobile service solutions sub-menu panel */}
-                  <div className="flex flex-col gap-2.5">
-                    <span className={`text-[10px] font-black uppercase tracking-wider ${isOverDarkBg ? 'text-slate-400' : 'text-slate-400/80'}`}>
-                      {currentTranslation.navServices}
-                    </span>
-                    {[
-                      { label: "Amazon Solutions", slug: "amazon-google-meta" },
-                      { label: "Mercado Libre Ads", slug: "mercado-libre-ads" },
-                      { label: "Google & Meta Ads", slug: "amazon-google-meta" },
-                      { label: "Tiktok Shops", slug: "tiktok-shops" },
-                      { label: "Influencer Marketing", slug: "influencer-marketing" }
-                    ].map((item, id) => (
-                      <a
-                        key={id}
-                        href={`?service=${item.slug}&lang=${lang}`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          triggerTransition(() => {
-                             window.history.pushState({}, '', `?service=${item.slug}&lang=${lang}`);
-                             window.dispatchEvent(new Event('popstate'));
-                          });
-                        }}
-                        className={`text-xs font-bold pl-3 border-l-2 ${
-                          isOverDarkBg
-                            ? 'text-slate-600 border-slate-200 hover:text-[#f90] hover:border-[#f90]'
-                            : 'text-slate-300 border-white/10 hover:text-[#ffb400] hover:border-[#ffb400]'
-                        }`}
-                      >
-                        {item.label}
-                      </a>
-                    ))}
-                  </div>
-
-                  {/* About Us trigger item in mobile panel */}
-                  <a
-                    href="?service=about"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setMobileMenuOpen(false);
-                      triggerTransition(() => {
-                        const url = new window.URL(window.location.href);
-                        url.searchParams.set('service', 'about');
-                        window.history.pushState({}, '', url.toString());
-                        setSelectedService('about');
-                      });
-                    }}
-                    className={`text-sm tracking-wide font-black transition-colors cursor-pointer ${
-                      isOverDarkBg ? 'text-slate-700 hover:text-[#f90]' : 'text-slate-100 hover:text-[#ffb400]'
-                    }`}
-                  >
-                    {currentTranslation.navAbout}
-                  </a>
-
-                  {/* FAQ trigger item in mobile panel */}
-                  <a
-                    href="?service=faq"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setMobileMenuOpen(false);
-                      triggerTransition(() => {
-                        const url = new window.URL(window.location.href);
-                        url.searchParams.set('service', 'faq');
-                        window.history.pushState({}, '', url.toString());
-                        setSelectedService('faq');
-                      });
-                    }}
-                    className={`text-sm tracking-wide font-black transition-colors cursor-pointer ${
-                      isOverDarkBg ? 'text-slate-700 hover:text-[#f90]' : 'text-slate-100 hover:text-[#ffb400]'
-                    }`}
-                  >
-                    {currentTranslation.navFaq}
-                  </a>
-
-                  {/* Contact navigation item fully embedded */}
-                  <a
-                    href="https://wa.me/5491165088135"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`text-sm tracking-wide font-black transition-colors ${
-                      isOverDarkBg ? 'text-slate-700 hover:text-[#f90]' : 'text-slate-100 hover:text-[#ffb400]'
-                    }`}
-                  >
-                    {currentTranslation.navContact}
-                  </a>
-
-                  {/* Compact free PPC Audit CTA */}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.open("https://calendly.com/federico-rrwv/30min", "_blank");
-                    }}
-                    className="w-full mt-2 py-3 bg-[#ffb400] text-[#102135] font-black text-xs uppercase tracking-wider text-center rounded-xl shadow-[0_4px_12px_rgba(255,180,0,0.25)] hover:scale-[1.01] active:scale-[0.99] transition-transform cursor-pointer"
-                  >
-                    {currentTranslation.auditButton}
-                  </button>
-
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-        </motion.div>
-      </nav>
+      <div className="min-h-screen bg-[#eaeded] flex flex-col font-sans text-[#102135] overflow-x-clip relative z-10">
 
       {/* Floating Actions */}
       <div className="fixed bottom-5 lg:bottom-8 right-5 lg:right-8 z-[100] flex items-center justify-end gap-3 sm:gap-4 pointer-events-none">
@@ -1595,7 +1076,7 @@ export default function App() {
         <div className="w-full sticky top-0 left-0 z-0 h-[100dvh] overflow-hidden bg-[#eaeded]">
 
             {/* Sección Hero */}
-            <section ref={sectionRef} className="relative px-4 pb-0 pt-24 sm:pt-28 lg:pt-[104px] xl:pt-[120px] lg:pb-12 z-10 w-full h-full overflow-y-auto lg:overflow-visible flex items-start lg:items-center">
+            <section ref={sectionRef} className="relative px-4 pb-0 pt-8 sm:pt-10 lg:pt-12 xl:pt-14 lg:pb-12 z-10 w-full h-full overflow-y-auto lg:overflow-visible flex items-start lg:items-center">
           {/* Fondo decorativo sutil */}
           <div className="fixed top-0 right-0 w-[600px] h-[600px] bg-[#007185] rounded-[100%] blur-[150px] -z-10 opacity-[0.05] pointer-events-none" />
           <div className="fixed bottom-0 left-0 w-[500px] h-[500px] bg-[#f90] rounded-[100%] blur-[150px] -z-10 opacity-[0.04] pointer-events-none" />
@@ -1687,7 +1168,7 @@ export default function App() {
 
               </div>
 
-              {/* Columna Derecha: El Video de Vimeo embebido de forma premium con anillos de neumorfismo interactivos */}
+              {/* Columna Derecha: imagen de la carátula con anillos de neumorfismo interactivos */}
               <div className="w-full lg:w-[48%] xl:w-[46%] flex flex-col items-center justify-center pointer-events-auto relative py-16 px-8 sm:px-14 select-none">
                 
                 <div className="w-full relative group">
@@ -1729,47 +1210,9 @@ export default function App() {
                     {/* Glass reflections overlay */}
                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 pointer-events-none mix-blend-overlay z-20" />
                     
-                    {/* Capa de Video (Fondo) */}
-                    <div 
-                      className="absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden z-10 flex items-center justify-center"
-                      style={{
-                        maskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 80%)',
-                        WebkitMaskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 80%)',
-                      }}
-                    >
-                      {showIframe && (
-                        <iframe 
-                          ref={iframeRef}
-                          src="https://player.vimeo.com/video/1194020653?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&muted=1&loop=0&controls=0&title=0&byline=0&portrait=0&playsinline=1&background=1" 
-                          frameBorder="0" 
-                          allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
-                          referrerPolicy="strict-origin-when-cross-origin" 
-                          style={{ 
-                            position: 'absolute', 
-                            top: 0, 
-                            left: 0, 
-                            width: '100%', 
-                            height: '100%',
-                            filter: 'contrast(1.05) brightness(1.02)',
-                            opacity: 1,
-                            transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
-                          }} 
-                          title="gemini_generated_video_1A63899E"
-                          loading="eager"
-                        ></iframe>
-                      )}
-                    </div>
 
-                    {/* Capa de Imagen (Encima, con desvanecimiento animado) */}
-                    <AnimatePresence>
-                      {isHeroImageVisible && (
-                        <motion.div 
-                          key="hero-image-overlay"
-                          initial={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 1.5, ease: "easeInOut" }}
-                          className="absolute inset-0 w-full h-full z-20 bg-[#eaeded] flex items-center justify-center rounded-[2rem] overflow-hidden"
-                        >
+                    {/* Imagen de la carátula */}
+                          <div className="absolute inset-0 w-full h-full z-20 bg-[#eaeded] flex items-center justify-center rounded-[2rem] overflow-hidden">
                           <img 
                             src={optimizeCloudinaryUrl("https://res.cloudinary.com/dzrqhomvz/image/upload/v1779291160/fmhpubtcndg84fvbqago.png", 1000)} 
                             alt="Premium Team & Agency" 
@@ -1778,9 +1221,7 @@ export default function App() {
                             loading="eager"
                             fetchPriority="high"
                           />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                          </div>
                   </div>
                 </div>
               </div>
@@ -2059,144 +1500,22 @@ export default function App() {
           </div>
         </section>
 
-        {/* Testimonios Section */}
-        <Testimonios lang={lang} onViewCasesClick={() => {
-          triggerTransition(() => {
-            const url = new window.URL(window.location.href);
-            url.searchParams.set('service', 'casos-exito');
-            window.history.pushState({}, '', url);
-            setSelectedService('casos-exito');
-          });
-        }} />
+        {/* Domina tus Ventas en Amazon (el mismo componente de Amazon Solutions) */}
+        <section className="w-full bg-[#eaeded] relative z-40 pt-16 lg:pt-20 overflow-x-hidden">
+          <VentajasAmazon
+            serviceSlug="amazon-solutions"
+            lang={lang}
+            onContactClick={() => {
+              window.open("https://wa.me/5491165088135", "_blank");
+            }}
+          />
+        </section>
       </main>
       </>
       )}
 
-      {/* Global Contact Section */}
-      <PreviousContactForm lang={lang} />
       </div>
 
-      {/* Modern Multi-Column Footer */}
-      <footer ref={footerRef} className="bg-[#0b1626] text-white py-12 lg:py-16 border-t-[3px] border-[#f90] w-full z-0 fixed bottom-0 left-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-14 border-b border-white/10 pb-10">
-            {/* Column 1: Brand / Description */}
-            <div className="space-y-4">
-              <p className="text-white/70 text-xs sm:text-sm leading-relaxed max-w-sm font-medium">
-                {lang === 'es' 
-                  ? "Sistemas avanzados de adquisición de tráfico, modelado financiero de márgenes y optimización SEO para escalar marcas líderes en Amazon y marketplaces globales."
-                  : "Advanced traffic acquisition, retail financial margin modeling, and search engine optimization to scale leading brands across Amazon and global marketplaces."}
-              </p>
-              <div className="flex gap-3 pt-1">
-                <a href="#" className="p-2 bg-white/5 hover:bg-[#f90] rounded-xl transition-all duration-200 text-white/50 hover:text-[#102135]" title="Youtube">
-                  <Youtube className="w-4 h-4" />
-                </a>
-                <a href="#" className="p-2 bg-white/5 hover:bg-[#f90] rounded-xl transition-all duration-200 text-white/50 hover:text-[#102135]" title="Twitter">
-                  <Twitter className="w-4 h-4" />
-                </a>
-                <a href="#" className="p-2 bg-white/5 hover:bg-[#f90] rounded-xl transition-all duration-200 text-white/50 hover:text-[#102135]" title="Linkedin">
-                  <Linkedin className="w-4 h-4" />
-                </a>
-              </div>
-            </div>
-
-            {/* Column 2: Quick Links */}
-            <div className="space-y-4">
-              <h3 className="text-[#f90] text-xs font-extrabold uppercase tracking-widest">
-                Quick link
-              </h3>
-              <ul className="space-y-3 text-xs sm:text-sm font-semibold text-white/70">
-                <li>
-                  <a 
-                    href="#" 
-                    onClick={(e) => { 
-                      e.preventDefault(); 
-                      if (selectedService) handleGoBack(); 
-                      window.scrollTo({ top: 0, behavior: 'smooth' }); 
-                    }} 
-                    className="hover:text-[#f90] transition-colors"
-                  >
-                    Home
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="https://wa.me/5491165088135"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-[#f90] transition-colors"
-                  >
-                    Contact
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="?service=about"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      triggerTransition(() => {
-                        const url = new window.URL(window.location.href);
-                        url.searchParams.set('service', 'about');
-                        window.history.pushState({}, '', url.toString());
-                        setSelectedService('about');
-                      });
-                    }}
-                    className="hover:text-[#f90] transition-colors font-semibold text-left focus:outline-none cursor-pointer block"
-                  >
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="?service=faq"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      triggerTransition(() => {
-                        const url = new window.URL(window.location.href);
-                        url.searchParams.set('service', 'faq');
-                        window.history.pushState({}, '', url.toString());
-                        setSelectedService('faq');
-                      });
-                    }}
-                    className="hover:text-[#f90] transition-colors font-semibold text-left focus:outline-none cursor-pointer block"
-                  >
-                    FAQ
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Column 3: Contact Info */}
-            <div className="space-y-4">
-              <h3 className="text-[#f90] text-xs font-extrabold uppercase tracking-widest">
-                Contact
-              </h3>
-              <ul className="space-y-3 text-xs sm:text-sm font-semibold text-white/70">
-                <li className="flex items-center gap-2.5">
-                  <span className="p-1.5 bg-white/5 rounded-lg border border-white/5 shrink-0">
-                    <Phone className="w-3.5 h-3.5 text-[#f90]" />
-                  </span>
-                  <a href="tel:+1159194932" className="hover:text-[#f90] transition-colors font-bold">+11 59 19 49 32</a>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="p-1.5 bg-white/5 rounded-lg border border-white/5 shrink-0 mt-0.5">
-                    <MapPin className="w-3.5 h-3.5 text-[#f90]" />
-                  </span>
-                  <span className="font-semibold text-white/80">Av Libertador 1838</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-white/40 mt-8 font-semibold">
-            <p>&copy; {new Date().getFullYear()} All rights reserved.</p>
-            <div className="flex gap-4">
-              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-            </div>
-          </div>
-        </div>
-      </footer>
     </>
   );
 }
